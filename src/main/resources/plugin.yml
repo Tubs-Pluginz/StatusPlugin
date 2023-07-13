@@ -2,3 +2,19 @@ name: StatusPlugin
 version: '${project.version}'
 main: de.tubyoub.statusplugin.StatusPlugin
 api-version: 1.20
+commands:
+  status:
+    description: Set a players Status, get Info, get Help, reload the plugin.
+permissions:
+  StatusPlugin.setStatus:
+    description: Allows setting own status. (default player)
+    default: not op
+  StatusPlugin.formatting:
+    description: Allows using formatting codes such as &l,... (default op)
+    default: op
+  StatusPlugin.admin.setStatus:
+    description: Allows setting other players' statuses. (default op)
+    default: op
+  StatusPlugin.admin.reload:
+    description: Allows reloading statuses. (default op)
+    default: op
