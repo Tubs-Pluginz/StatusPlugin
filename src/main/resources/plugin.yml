@@ -1,0 +1,4 @@
+name: StatusPlugin
+version: '${project.version}'
+main: de.tubyoub.statusplugin.StatusPlugin
+api-version: 1.20
