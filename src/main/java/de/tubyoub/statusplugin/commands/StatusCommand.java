@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -23,8 +24,43 @@ public class StatusCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player player = (Player) sender;
         StatusPlugin plugin = (StatusPlugin) Bukkit.getPluginManager().getPlugin("StatusPlugin");
+
+        if (sender instanceof ConsoleCommandSender) {
+    if (args.length > 0 && "reload".equals(args[0])) {
+        statusManager.reloadStatuses();
+        sender.sendMessage("Statuses have been reloaded.");
+        return true;
+    }
+
+    if (args.length > 1) {
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target != null) {
+            if ("remove".equals(args[1])) {
+                statusManager.removeStatus(target);
+                sender.sendMessage("Removed " + target.getName() + "'s status.");
+                return true;
+            } else {
+                String status = Arrays.stream(args, 1, args.length).collect(Collectors.joining(" "));
+                statusManager.setStatus(target, status, sender);
+                sender.sendMessage("Set " + target.getName() + "'s status to: " + status);
+                return true;
+            }
+        }
+        sender.sendMessage("Invalid player name: " + args[1]);
+        return true;
+    } else {
+        sender.sendMessage("Usage: /status <player> <status>");
+        return true;
+    }
+}
+
+
+        if (!(sender instanceof Player)) {
+            return false;
+        }
+
+        Player player = (Player) sender;
 
         if (args.length > 0 && "reload".equals(args[0])) {
             if (!sender.hasPermission("StatusPlugin.admin.reload")) {
@@ -51,7 +87,7 @@ public class StatusCommand implements CommandExecutor {
                 sender.sendMessage("Here you can see all available commands:");
                 sender.sendMessage("/status <status> - Set your own status.");
                 sender.sendMessage("/status remove - Remove your Status.");
-                sender.sendMessage("/status remove <player> - Remove a player's status. (Admin)");
+                sender.sendMessage("/status <player> remove - Remove a player's status. (Admin)");
                 sender.sendMessage("/status <player> <status> - Set a player's status. (Admin)");
                 sender.sendMessage("/status help colors - Show a list of color codes.");
                 sender.sendMessage("/status reload - Reload all statuses. (Admin)");
@@ -64,7 +100,7 @@ public class StatusCommand implements CommandExecutor {
         if (args.length > 0 && "info".equals(args[0])) {
             plugin.sendPluginMessages(sender, "title");
             sender.sendMessage(ChatColor.GREEN + "Author: TubYoub");
-            sender.sendMessage(ChatColor.GREEN + "Version: 1.0");
+            sender.sendMessage(ChatColor.GREEN + "Version: 1.1");
 
             TextComponent githubLink = new TextComponent(ChatColor.DARK_GRAY + "" + ChatColor.UNDERLINE + "GitHub");
             githubLink.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/TubYoub/StatusPlugin"));
@@ -86,9 +122,11 @@ public class StatusCommand implements CommandExecutor {
             }
             Player target = Bukkit.getPlayer(args[0]);
             if (target != null) {
-                statusManager.removeStatus(target);
-                sender.sendMessage("Removed " + target.getName() + "'s status.");
-                return true;
+                if ("remove".equals(args[1])) {
+                    statusManager.removeStatus(target);
+                    sender.sendMessage("Removed " + target.getName() + "'s status.");
+                    return true;
+                }
             }
             sender.sendMessage("Invalid player name: " + args[0]);
             return true;

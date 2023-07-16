@@ -8,7 +8,7 @@ commands:
 permissions:
   StatusPlugin.setStatus:
     description: Allows setting own status. (default player)
-    default: not op
+    default: true
   StatusPlugin.formatting:
     description: Allows using formatting codes such as &l,... (default op)
     default: op
