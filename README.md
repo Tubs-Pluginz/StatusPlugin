@@ -1,5 +1,6 @@
 # Tub's Status Plugin
 ![Static Badge](https://img.shields.io/badge/MC-1.20.1-green)
+[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
 
 
 This is a Minecraft plugin for Spigot/Paper servers that allows players to set their own status, which is displayed in the tab list and above their heads in-game.
@@ -40,3 +41,5 @@ I currently have no plans to get co-contributer's on this project, but if you ha
 ## License
 
 This project is licensed under the [AGPL-3.0 License](LICENSE).
+
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
