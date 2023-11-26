@@ -1,10 +1,11 @@
-name: StatusPlugin
+name: ${project.name}
 version: '${project.version}'
 main: de.tubyoub.statusplugin.StatusPlugin
 api-version: 1.20
+author: TubYoub
 commands:
   status:
-    description: Set a players Status, get Info, get Help, reload the plugin.
+    description: Set a player's status, get info, get help, reload the plugin, set/reset max length
 permissions:
   StatusPlugin.setStatus:
     description: Allows setting own status. (default player)
@@ -17,4 +18,10 @@ permissions:
     default: op
   StatusPlugin.admin.reload:
     description: Allows reloading statuses. (default op)
+    default: op
+  StatusPlugin.admin.setMaxlength:
+    description: Allows setting the maximum length of statuses.
+    default: op
+  StatusPlugin.admin.resetMaxlength:
+    description: Allows resetting the maximum length of statuses to default.
     default: op

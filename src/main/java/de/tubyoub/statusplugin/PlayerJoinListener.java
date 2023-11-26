@@ -13,13 +13,10 @@ public class PlayerJoinListener implements Listener {
         this.statusManager = statusManager;
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        String status = (String) statusManager.getStatus(player);
-        if (status != null) {
-            player.setDisplayName("[" + status + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName());
-            player.setPlayerListName("[" + status + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName());
-        }
-    }
+@EventHandler
+public void onPlayerJoin(PlayerJoinEvent event) {
+    Player player = event.getPlayer();
+    statusManager.updateDisplayName(player);
+}
+
 }

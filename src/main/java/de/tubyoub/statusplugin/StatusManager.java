@@ -10,33 +10,70 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+
+import static org.bukkit.Bukkit.getLogger;
 
 public class StatusManager {
     private final File statusFile;
     private final Map<UUID, String> statusMap = new HashMap<>();
 
+    private static final int DEFAULT_MAX_LENGTH = 15;
+    private int maxStatusLength = DEFAULT_MAX_LENGTH;
+    private final StatusPlugin plugin;
+
     public StatusManager(StatusPlugin plugin) {
+        this.plugin = plugin;
+        this.maxStatusLength = plugin.getConfig().getInt("maxStatusLength", DEFAULT_MAX_LENGTH);
         this.statusFile = new File(plugin.getDataFolder(), "statuses.yml");
         loadStatuses();
     }
 
-     public void setStatus(Player player, String status, CommandSender sender) {
-        status = translateColorsAndFormatting(status, sender);
-        statusMap.put(player.getUniqueId(), status);
-        updateDisplayName(player);
-        saveStatuses();
+public boolean setStatus(Player player, String status, CommandSender sender) {
+    String translatedStatus = translateColorsAndFormatting(status, sender);
+    if (calculateEffectiveLength(translatedStatus) > maxStatusLength) {
+        sender.sendMessage(ChatColor.RED + "Status is too long. Max length is " + maxStatusLength + " characters.");
+        return false;
     }
+    statusMap.put(player.getUniqueId(), translatedStatus);
+    updateDisplayName(player);
+    saveStatuses();
+    return true;
+}
+
 
     public String getStatus(Player player) {
         return statusMap.get(player.getUniqueId());
     }
 
     public void updateDisplayName(Player player) {
-        String status = statusMap.get(player.getUniqueId());
+        String status = getStatus(player);
         if (status != null) {
-            player.setDisplayName("[" + status + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName());
-            player.setPlayerListName("[" + status + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName());
+            String displayName = "[" + status + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName();
+            ChatColor.translateAlternateColorCodes('&', displayName);
+            player.setDisplayName(displayName);
+            player.setPlayerListName(displayName);
+        } else {
+            player.setDisplayName(player.getName());
+            player.setPlayerListName(player.getName());
         }
+    }
+    public int getMaxStatusLength() {
+        return maxStatusLength;
+    }
+
+public void setMaxStatusLength(int maxLength) {
+        this.maxStatusLength = maxLength;
+        plugin.getConfig().set("maxStatusLength", maxLength);
+        plugin.saveConfig();
+    }
+
+    public void resetMaxStatusLength() {
+        this.maxStatusLength = DEFAULT_MAX_LENGTH;
+        plugin.getConfig().set("maxStatusLength", DEFAULT_MAX_LENGTH);
+        plugin.saveConfig();
     }
 
     private void loadStatuses() {
@@ -55,7 +92,7 @@ public class StatusManager {
         try {
             yaml.save(statusFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            getLogger().severe("Could not save statuses: " + e.getMessage());
         }
     }
 
@@ -72,9 +109,13 @@ public class StatusManager {
         player.setDisplayName(player.getName());
         player.setPlayerListName(player.getName());
         saveStatuses();
-}
-
-
+    }
+        public int calculateEffectiveLength(String text) {
+        Pattern pattern = Pattern.compile("&[0-9a-fk-or]");
+        Matcher matcher = pattern.matcher(text);
+        String withoutColorCodes = matcher.replaceAll("");
+        return withoutColorCodes.length();
+    }
     public void reloadStatuses() {
         statusMap.clear();
         loadStatuses();
