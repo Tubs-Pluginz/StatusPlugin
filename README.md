@@ -14,7 +14,9 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 - Reload all statuses from file with `/status reload`
 - View a list of all available color codes with `/status help colors`
 - View info about the plugin with `/status info`
-
+- Set a maximum length for statuses with `/status setmaxlength <length>` (requires StatusPlugin.admin.setMaxlength permission)
+- Reset the maximum length of statuses to default (`15`) with `/status resetmaxlength` (requires StatusPlugin.admin.resetMaxlength permission)
+  (Color codes in statuses are not counted towards the character limit)
 - The status of every player is saved to a file, so they will keep their status when they rejoin the server.
 
 ## Permissions
@@ -23,6 +25,8 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 - `StatusPlugin.formatting:`: Allows a player to use formatting codes in their status (for example to color them). (default: `false`)
 - `StatusPlugin.admin.setStatus`: Allows a player to set and remove other players' statuses. (default: `false`)
 - `StatusPlugin.admin.reload`: Allows a player to reload all statuses.(default: `false`)
+- `StatusPlugin.admin.setMaxlength:` Allows a player to set the maximum length of statuses. (default: false)
+- `StatusPlugin.admin.resetMaxlength:` Allows a player to reset the maximum length of statuses to default. (default: false)
 
 ## Installation
 
