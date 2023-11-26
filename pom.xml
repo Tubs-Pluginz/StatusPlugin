@@ -39,7 +39,7 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>C:\Users\jornw\OneDrive\Desktop\Server\plugins\TubsStatusPlugin-1.1.jar</outputFile>
+                            <outputFile>C:\Users\jornw\OneDrive\Desktop\Server\plugins\TubsStatusPlugin-1.2.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
