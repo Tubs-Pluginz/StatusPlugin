@@ -1,7 +1,7 @@
 name: TubsStatusPlugin
 version: '${project.version}'
 main: de.tubyoub.statusplugin.StatusPlugin
-api-version: 1.20
+api-version: 1.13
 author: TubYoub
 commands:
   status:
@@ -10,9 +10,6 @@ permissions:
   StatusPlugin.setStatus:
     description: Allows setting own status. (default player)
     default: true
-  StatusPlugin.formatting:
-    description: Allows using formatting codes such as &l,... (default op)
-    default: op
   StatusPlugin.admin.setStatus:
     description: Allows setting other players' statuses. (default op)
     default: op
@@ -24,4 +21,22 @@ permissions:
     default: op
   StatusPlugin.admin.resetMaxlength:
     description: Allows resetting the maximum length of statuses to default.
+    default: op
+  StatusPlugin.formatting.color:
+    description: Allows to use color in statuses
+    default: op
+  StatusPlugin.formatting.bold:
+    description: Allows to use bold formatting in statuses
+    default: op
+  StatusPlugin.formatting.magic:
+    description: Allows to use magic formatting in statuses
+    default: op
+  StatusPlugin.formatting.underline:
+    description: Allows to use underline formatting in statuses
+    default: op
+  StatusPlugin.formatting.strikethrough:
+    description: Allows to use strikethrough formatting in statuses
+    default: op
+  StatusPlugin.formatting.italic:
+    description: Allows to use italic formatting in statuses
     default: op

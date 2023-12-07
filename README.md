@@ -1,5 +1,13 @@
 # Tub's Status Plugin
-![Static Badge](https://img.shields.io/badge/MC-1.20.1-green)
+![Static Badge](https://img.shields.io/badge/MC-1.13-green)
+![Static Badge](https://img.shields.io/badge/MC-1.14-green)
+![Static Badge](https://img.shields.io/badge/MC-1.15-green)
+![Static Badge](https://img.shields.io/badge/MC-1.16-green)
+![Static Badge](https://img.shields.io/badge/MC-1.17-green)
+![Static Badge](https://img.shields.io/badge/MC-1.18-green)
+![Static Badge](https://img.shields.io/badge/MC-1.19-green)
+![Static Badge](https://img.shields.io/badge/MC-1.20-green)
+
 [![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
 
 
@@ -11,7 +19,7 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 - Set status with formatting codes (for example to color them) with `/status &3<status>`
 - Set other players' statuses with `/status <player> <status>` (requires `StatusPlugin.admin.setStatus` permission)
 - Remove other players' statuses with `/status remove <player>` (requires `StatusPlugin.admin.setStatus` permission)
-- Reload all statuses from file with `/status reload`
+- Reload all statuses from file with `/status reload` (requires `StatusPlugin.admin.reload` permission) (Can be executed by console)
 - View a list of all available color codes with `/status help colors`
 - View info about the plugin with `/status info`
 - Set a maximum length for statuses with `/status setmaxlength <length>` (requires StatusPlugin.admin.setMaxlength permission)
@@ -22,11 +30,16 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 ## Permissions
 
 - `StatusPlugin.setStatus`: Allows a player to set their own status and remove it. (default: `true`)
-- `StatusPlugin.formatting:`: Allows a player to use formatting codes in their status (for example to color them). (default: `false`)
 - `StatusPlugin.admin.setStatus`: Allows a player to set and remove other players' statuses. (default: `false`)
 - `StatusPlugin.admin.reload`: Allows a player to reload all statuses.(default: `false`)
-- `StatusPlugin.admin.setMaxlength:` Allows a player to set the maximum length of statuses. (default: false)
-- `StatusPlugin.admin.resetMaxlength:` Allows a player to reset the maximum length of statuses to default. (default: false)
+- `StatusPlugin.admin.setMaxlength:` Allows a player to set the maximum length of statuses. (default: `false`)
+- `StatusPlugin.admin.resetMaxlength:` Allows a player to reset the maximum length of statuses to default. (default: `false`)
+- `StatusPlugin.formatting.color`: Allows a player to use color codes in their status. (default: `false`)
+- `StatusPlugin.formatting.bold`: Allows a player to use bold formatting in their status. (default: `false`)
+- `StatusPlugin.formatting.italic`: Allows a player to use italic formatting in their status. (default: `false`)
+- `StatusPlugin.formatting.underlined`: Allows a player to use underlined formatting in their status. (default: `false`)
+- `StatusPlugin.formatting.strikethrough`: Allows a player to use strikethrough formatting in their status. (default: `false`)
+- `StatusPlugin.formatting.magic`: Allows a player to use obfuscated formatting in their status. (default: `false`)
 
 ## Installation
 

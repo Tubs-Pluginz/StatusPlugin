@@ -1,6 +1,6 @@
-package de.tubyoub.statusplugin;
+package de.tubyoub.statusplugin.Listener;
 
-import org.bukkit.ChatColor;
+import de.tubyoub.statusplugin.StatusManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

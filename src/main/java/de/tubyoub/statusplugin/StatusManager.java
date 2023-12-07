@@ -12,8 +12,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import de.tubyoub.utils.ColourUtils;
 
-
+import static org.bukkit.Bukkit.getConsoleSender;
 import static org.bukkit.Bukkit.getLogger;
 
 public class StatusManager {
@@ -23,6 +24,7 @@ public class StatusManager {
     private static final int DEFAULT_MAX_LENGTH = 15;
     private int maxStatusLength = DEFAULT_MAX_LENGTH;
     private final StatusPlugin plugin;
+    private ColourUtils chatColour;
 
     public StatusManager(StatusPlugin plugin) {
         this.plugin = plugin;
@@ -31,17 +33,17 @@ public class StatusManager {
         loadStatuses();
     }
 
-public boolean setStatus(Player player, String status, CommandSender sender) {
-    String translatedStatus = translateColorsAndFormatting(status, sender);
-    if (calculateEffectiveLength(translatedStatus) > maxStatusLength) {
-        sender.sendMessage(ChatColor.RED + "Status is too long. Max length is " + maxStatusLength + " characters.");
-        return false;
+    public boolean setStatus(Player player, String status, CommandSender sender) {
+        String translatedStatus = translateColorsAndFormatting(status, sender);
+        if (calculateEffectiveLength(translatedStatus) > maxStatusLength) {
+            sender.sendMessage(ChatColor.RED + "Status is too long. Max length is " + maxStatusLength + " characters.");
+            return false;
+        }
+        statusMap.put(player.getUniqueId(), translatedStatus);
+        updateDisplayName(player);
+        saveStatuses();
+        return true;
     }
-    statusMap.put(player.getUniqueId(), translatedStatus);
-    updateDisplayName(player);
-    saveStatuses();
-    return true;
-}
 
 
     public String getStatus(Player player) {
@@ -49,22 +51,23 @@ public boolean setStatus(Player player, String status, CommandSender sender) {
     }
 
     public void updateDisplayName(Player player) {
-        String status = getStatus(player);
-        if (status != null) {
-            String displayName = "[" + status + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName();
-            ChatColor.translateAlternateColorCodes('&', displayName);
-            player.setDisplayName(displayName);
-            player.setPlayerListName(displayName);
-        } else {
-            player.setDisplayName(player.getName());
-            player.setPlayerListName(player.getName());
-        }
+    String status = getStatus(player);
+    if (status != null) {
+        String displayName = "[" + status + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName();
+        displayName = ColourUtils.format(displayName); // Assign the result back to displayName
+        getConsoleSender().sendMessage(displayName);
+        player.setDisplayName(displayName);
+        player.setPlayerListName(displayName);
+    } else {
+        player.setDisplayName(player.getName());
+        player.setPlayerListName(player.getName());
     }
+}
     public int getMaxStatusLength() {
         return maxStatusLength;
     }
 
-public void setMaxStatusLength(int maxLength) {
+    public void setMaxStatusLength(int maxLength) {
         this.maxStatusLength = maxLength;
         plugin.getConfig().set("maxStatusLength", maxLength);
         plugin.saveConfig();
@@ -97,11 +100,30 @@ public void setMaxStatusLength(int maxLength) {
     }
 
     public String translateColorsAndFormatting(String status, CommandSender sender) {
-        if (sender.hasPermission("StatusPlugin.formatting")) {
-            return ChatColor.translateAlternateColorCodes('&', status);
-        } else {
-            return ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', status));
+        String[] codes = {"&l", "&k", "&n", "&m", "&o"};
+        String[] permissions = {
+            "StatusPlugin.formatting.bold",
+            "StatusPlugin.formatting.magic",
+            "StatusPlugin.formatting.underline",
+            "StatusPlugin.formatting.strikethrough",
+            "StatusPlugin.formatting.italic"
+        };
+
+        if (!sender.hasPermission("StatusPlugin.formatting.color")) {
+            status = removeColorCodes(status);
         }
+        for (int i = 0; i < codes.length; i++) {
+            if (status.contains(codes[i]) && !sender.hasPermission(permissions[i])) {
+                status = status.replace(codes[i], "");
+            }
+        }
+        return ChatColor.translateAlternateColorCodes('§', status);
+    }
+
+    private String removeColorCodes(String status) {
+        Pattern pattern = Pattern.compile("&[0-9a-fk-or]");
+        Matcher matcher = pattern.matcher(status);
+        return matcher.replaceAll("");
     }
 
     public void removeStatus(Player player) {

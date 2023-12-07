@@ -2,6 +2,7 @@ package de.tubyoub.statusplugin.commands;
 
 import de.tubyoub.statusplugin.StatusManager;
 import de.tubyoub.statusplugin.StatusPlugin;
+import de.tubyoub.utils.ColourUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -14,11 +15,17 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+
+
 public class StatusCommand implements CommandExecutor {
+    String version = "1.3";
     private final StatusManager statusManager;
 
-    public StatusCommand(StatusManager statusManager) {
+    private final VersionChecker versionChecker;
+
+    public StatusCommand(StatusManager statusManager, VersionChecker versionChecker) {
         this.statusManager = statusManager;
+        this.versionChecker = versionChecker;
     }
 
     @Override
@@ -84,7 +91,7 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
                     }
                     String status = Arrays.stream(args, 1, args.length).collect(Collectors.joining(" "));
                     if (statusManager.setStatus(target, status, player)) {
-                        player.sendMessage("Set " + target.getName() + "'s status to: " + ChatColor.translateAlternateColorCodes('&', status));
+                        player.sendMessage("Set " + target.getName() + "'s status to: " + ColourUtils.format(status));
                     }
                     return;
                 }
@@ -97,13 +104,14 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
             }
             String status = String.join(" ", args);
             if (statusManager.setStatus(player, status, player)) {
-                player.sendMessage("Your status has been set to: " + "[" + status + "]");
+                player.sendMessage("Your status has been set to: " + "[" + ColourUtils.format(statusManager.getStatus(player)) + ChatColor.RESET + "]");
             }
 
         }
         private void reloadPlugin(Player sender) {
             if (!sender.hasPermission("StatusPlugin.admin.reload")) {
                     sender.sendMessage(ChatColor.RED + "You don't have permission to reload statuses.");
+                    return;
                 }
                 statusManager.reloadStatuses();
                 sender.sendMessage("Statuses have been reloaded.");
@@ -148,6 +156,7 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
         private void setmaxlenghtCommand(Player sender, String[] args) {
             if (!sender.hasPermission("StatusPlugin.admin.setMaxlength")) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to set the maximum status length.");
+                return;
                 }
                 if (args.length == 2) {
                     try {
@@ -164,15 +173,25 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
         private void resetmaxlenghtCommand(Player sender) {
             if (!sender.hasPermission("StatusPlugin.admin.resetMaxlength")) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to reset the maximum status length.");
+                return;
             }
             statusManager.resetMaxStatusLength();
             sender.sendMessage(ChatColor.GREEN + "Max status length reset to default.");
         }
         public void infoCommand(Player sender, StatusPlugin plugin){
-            plugin.sendPluginMessages(sender, "title");
+            if(!(plugin == null)) {
+                plugin.sendPluginMessages(sender, "title");
+            }else {
+                sender.sendMessage(ChatColor.GOLD + "◢◤" + ChatColor.YELLOW + "Tu" + ChatColor.DARK_GREEN + "b's" + ChatColor.DARK_AQUA + " Status" + ChatColor.GOLD + " Plugin" + ChatColor.YELLOW + "◥◣");
+            }
             sender.sendMessage(ChatColor.GREEN + "Author: TubYoub");
-            sender.sendMessage(ChatColor.GREEN + "Version: 1.2");
+            sender.sendMessage(ChatColor.GREEN + "Version: " + version);
 
+            if (VersionChecker.isNewVersionAvailable(version)) {
+                sender.sendMessage(ChatColor.YELLOW + "A new version is available! Update at: " + ChatColor.UNDERLINE + "https://modrinth.com/plugin/tubs-status-plugin/version/latest");
+            }else{
+                sender.sendMessage(ChatColor.GREEN + "You are using the latest version!");
+            }
             TextComponent githubLink = new TextComponent(ChatColor.DARK_GRAY + "" + ChatColor.UNDERLINE + "GitHub");
             githubLink.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/TubYoub/StatusPlugin"));
             githubLink.setUnderlined(true);
@@ -180,8 +199,14 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 
             sender.sendMessage(ChatColor.BLUE + "" + ChatColor.UNDERLINE + "Discord" + ChatColor.RESET + " is coming soon! (Maybe)");
             sender.sendMessage("If you have any issues please report them on GitHub.");
-
-            plugin.sendPluginMessages(sender, "line");
+            if (!(plugin == null)) {
+                plugin.sendPluginMessages(sender, "line");
+            }else {
+                sender.sendMessage(ChatColor.GOLD + "-" + ChatColor.YELLOW + "-" + ChatColor.GREEN + "-" + ChatColor.DARK_GREEN + "-" + ChatColor.BLUE + "-" + ChatColor.DARK_AQUA + "-"
+                        + ChatColor.GOLD + "-" + ChatColor.YELLOW + "-" + ChatColor.GREEN + "-" + ChatColor.DARK_GREEN + "-" + ChatColor.BLUE + "-" + ChatColor.DARK_AQUA + "-"
+                        + ChatColor.GOLD + "-" + ChatColor.YELLOW + "-" + ChatColor.GREEN + "-" + ChatColor.DARK_GREEN + "-" + ChatColor.BLUE + "-" + ChatColor.DARK_AQUA + "-"
+                        + ChatColor.GOLD + "-");
+            }
         }
         private void removeOwnStatus(Player player) {
             if (!player.hasPermission("StatusPlugin.setStatus")) {
