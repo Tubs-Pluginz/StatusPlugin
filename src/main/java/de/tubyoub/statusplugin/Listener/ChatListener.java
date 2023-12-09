@@ -1,7 +1,9 @@
 package de.tubyoub.statusplugin.Listener;
 
 import de.tubyoub.statusplugin.StatusManager;
+import de.tubyoub.utils.ColourUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +25,7 @@ public class ChatListener implements Listener {
         if (status == null) {
             broadcastMessage = player.getName() + ": " + message;
         } else {
-            broadcastMessage = "[" + status + "] " + player.getName() + ": " + message;
+            broadcastMessage = "[" + ColourUtils.format(status) + ChatColor.RESET + "] " + player.getName() + ": " + message;
         }
         Bukkit.broadcastMessage(broadcastMessage);
         // Cancel the original event

@@ -19,10 +19,10 @@ public class StatusPlugin extends JavaPlugin {
         this.statusManager = new StatusManager(this);
         this.saveDefaultConfig();
         this.versionChecker = new VersionChecker();
-        StatusCommand statusCommand = new StatusCommand(statusManager,versionChecker);
-        getCommand("status").setExecutor(new StatusCommand(this.statusManager,versionChecker));
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this.statusManager), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this.statusManager), this);
+        StatusCommand statusCommand = new StatusCommand(statusManager,versionChecker);
+        getCommand("status").setExecutor(new StatusCommand(this.statusManager,versionChecker));
         getCommand("status").setExecutor(statusCommand);
         getCommand("status").setTabCompleter(new StatusTabCompleter());
 

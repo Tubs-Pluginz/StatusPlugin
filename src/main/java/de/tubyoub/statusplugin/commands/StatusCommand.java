@@ -22,6 +22,7 @@ public class StatusCommand implements CommandExecutor {
     private final StatusManager statusManager;
 
     private final VersionChecker versionChecker;
+    private StatusPlugin plugin;
 
     public StatusCommand(StatusManager statusManager, VersionChecker versionChecker) {
         this.statusManager = statusManager;
@@ -30,7 +31,7 @@ public class StatusCommand implements CommandExecutor {
 
     @Override
 public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    StatusPlugin plugin = (StatusPlugin) Bukkit.getPluginManager().getPlugin("StatusPlugin");
+    this.plugin = (StatusPlugin) Bukkit.getPluginManager().getPlugin("TubsStatusPlugin");
 
     if (!(sender instanceof Player)) {
         // Handle console commands here
@@ -146,12 +147,11 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
             }
         }
         private void displayColorCodes(CommandSender sender, StatusPlugin plugin) {
-            sender.sendMessage(ChatColor.GOLD + "Available Color Codes:");
-            for (ChatColor color : ChatColor.values()) {
-                if (color.isColor()) {
-                    sender.sendMessage(color + color.name() + ChatColor.RESET + " - &" + color.getChar());
-                }
+            sender.sendMessage(ChatColor.GOLD + "Available Color and Formatting Codes:");
+            for (ChatColor code : ChatColor.values()) {
+                sender.sendMessage(code + code.name() + ChatColor.RESET + " - &" + code.getChar());
             }
+            sender.sendMessage(ChatColor.RED + "These color codes are only usable if u have the permissions for them");
         }
         private void setmaxlenghtCommand(Player sender, String[] args) {
             if (!sender.hasPermission("StatusPlugin.admin.setMaxlength")) {
