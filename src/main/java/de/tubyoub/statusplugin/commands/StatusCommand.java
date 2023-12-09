@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 
 public class StatusCommand implements CommandExecutor {
-    String version = "1.3";
+    String version = "1.3.1";
     private final StatusManager statusManager;
 
     private final VersionChecker versionChecker;
