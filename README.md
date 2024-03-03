@@ -57,6 +57,6 @@ I currently have no plans to get co-contributer's on this project, but if you ha
 
 ## License
 
-This project is licensed under the [AGPL-3.0 License](LICENSE).
+This project is licensed under the [Unlicense](LICENSE).
 
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)
