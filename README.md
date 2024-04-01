@@ -26,6 +26,8 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 - Reset the maximum length of statuses to default (`15`) with `/status resetmaxlength` (requires StatusPlugin.admin.resetMaxlength permission)
   (Color codes in statuses are not counted towards the character limit)
 - The status of every player is saved to a file, so they will keep their status when they rejoin the server.
+- The Plugin supports `PlaceholderAPI v2.11.5`
+  - The Plugin reloads statuses every 600 Game Ticks (30seconds) so the Placeholders can update themselves.
 
 ## Permissions
 
@@ -57,6 +59,6 @@ I currently have no plans to get co-contributer's on this project, but if you ha
 
 ## License
 
-This project is licensed under the [Unlicense](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
 
 [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com)

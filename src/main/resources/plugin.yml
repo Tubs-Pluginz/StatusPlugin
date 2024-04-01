@@ -3,6 +3,7 @@ version: '${project.version}'
 main: de.tubyoub.statusplugin.StatusPlugin
 api-version: 1.13
 author: TubYoub
+softdepend: [PlaceholderAPI]
 commands:
   status:
     description: Set a player's status, get info, get help, reload the plugin, set/reset max length
@@ -39,4 +40,7 @@ permissions:
     default: op
   StatusPlugin.formatting.italic:
     description: Allows to use italic formatting in statuses
+    default: op
+  StatusPlugin.placeholders:
+    description: Allows players to use Placeholders from PlaceholderAPI
     default: op

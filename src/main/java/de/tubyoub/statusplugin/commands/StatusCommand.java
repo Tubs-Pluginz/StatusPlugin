@@ -1,6 +1,6 @@
 package de.tubyoub.statusplugin.commands;
 
-import de.tubyoub.statusplugin.StatusManager;
+import de.tubyoub.statusplugin.Managers.StatusManager;
 import de.tubyoub.statusplugin.StatusPlugin;
 import de.tubyoub.utils.ColourUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -17,39 +17,40 @@ import java.util.stream.Collectors;
 
 
 
-public class StatusCommand implements CommandExecutor {
-    String version = "1.3.1";
-    private final StatusManager statusManager;
+    public class StatusCommand implements CommandExecutor {
+        String version;
+        private final StatusManager statusManager;
 
-    private final VersionChecker versionChecker;
-    private StatusPlugin plugin;
+        private final VersionChecker versionChecker;
+        private StatusPlugin plugin;
 
-    public StatusCommand(StatusManager statusManager, VersionChecker versionChecker) {
-        this.statusManager = statusManager;
-        this.versionChecker = versionChecker;
-    }
+        public StatusCommand(StatusManager statusManager, VersionChecker versionChecker, String version) {
+            this.statusManager = statusManager;
+            this.versionChecker = versionChecker;
+            this.version = version;
+        }
 
     @Override
-public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    this.plugin = (StatusPlugin) Bukkit.getPluginManager().getPlugin("TubsStatusPlugin");
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        this.plugin = (StatusPlugin) Bukkit.getPluginManager().getPlugin("TubsStatusPlugin");
 
-    if (!(sender instanceof Player)) {
-        // Handle console commands here
-        if (args.length > 0 && "reload".equals(args[0])) {
-            statusManager.reloadStatuses();
-            sender.sendMessage("Statuses have been reloaded.");
+        if (!(sender instanceof Player)) {
+            // Handle console commands here
+            if (args.length > 0 && "reload".equals(args[0])) {
+                statusManager.reloadStatuses();
+                sender.sendMessage("Statuses have been reloaded.");
+                return true;
+            }
+            sender.sendMessage("This command can only be run by a player.");
             return true;
         }
-        sender.sendMessage("This command can only be run by a player.");
-        return true;
-    }
 
-    Player player = (Player) sender;
+        Player player = (Player) sender;
 
-    if (args.length == 0) {
-        player.sendMessage("Try using /status help");
-        return true;
-    }
+        if (args.length == 0) {
+            player.sendMessage("Try using /status help");
+            return true;
+        }
 
     switch (args[0].toLowerCase()) {
         case "reload":

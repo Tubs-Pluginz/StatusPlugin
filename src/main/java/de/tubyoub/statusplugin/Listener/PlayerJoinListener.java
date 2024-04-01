@@ -1,6 +1,6 @@
 package de.tubyoub.statusplugin.Listener;
 
-import de.tubyoub.statusplugin.StatusManager;
+import de.tubyoub.statusplugin.Managers.StatusManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

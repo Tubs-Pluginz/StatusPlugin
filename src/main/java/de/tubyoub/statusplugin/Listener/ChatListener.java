@@ -1,6 +1,6 @@
 package de.tubyoub.statusplugin.Listener;
 
-import de.tubyoub.statusplugin.StatusManager;
+import de.tubyoub.statusplugin.Managers.StatusManager;
 import de.tubyoub.utils.ColourUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

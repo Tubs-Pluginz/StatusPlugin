@@ -15,10 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 public class VersionChecker {
+    private static final String project = "km0yAITg";
 
     public static boolean isNewVersionAvailable(String version) {
         try {
-            URL url = new URL("https://api.modrinth.com/v2/project/km0yAITg/version");
+            URL url = new URL("https://api.modrinth.com/v2/project/" + project + "/version");
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

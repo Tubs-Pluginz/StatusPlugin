@@ -1,5 +1,8 @@
-package de.tubyoub.statusplugin;
+package de.tubyoub.statusplugin.Managers;
 
+import de.tubyoub.statusplugin.StatusPlugin;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,9 +28,11 @@ public class StatusManager {
     private int maxStatusLength = DEFAULT_MAX_LENGTH;
     private final StatusPlugin plugin;
     private ColourUtils chatColour;
+    private final boolean placeholderAPIPresent;
 
     public StatusManager(StatusPlugin plugin) {
         this.plugin = plugin;
+        this.placeholderAPIPresent = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
         this.maxStatusLength = plugin.getConfig().getInt("maxStatusLength", DEFAULT_MAX_LENGTH);
         this.statusFile = new File(plugin.getDataFolder(), "statuses.yml");
         loadStatuses();
@@ -39,30 +44,35 @@ public class StatusManager {
             sender.sendMessage(ChatColor.RED + "Status is too long. Max length is " + maxStatusLength + " characters.");
             return false;
         }
-        statusMap.put(player.getUniqueId(), translatedStatus);
+
+        // Store the original status, not the translated one
+        statusMap.put(player.getUniqueId(), status);
         updateDisplayName(player);
         saveStatuses();
         return true;
     }
-
 
     public String getStatus(Player player) {
         return statusMap.get(player.getUniqueId());
     }
 
     public void updateDisplayName(Player player) {
-    String status = getStatus(player);
-    if (status != null) {
-        String displayName = "[" + status + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName();
-        displayName = ColourUtils.format(displayName); // Assign the result back to displayName
-        getConsoleSender().sendMessage(displayName);
-        player.setDisplayName(displayName);
-        player.setPlayerListName(displayName);
-    } else {
-        player.setDisplayName(player.getName());
-        player.setPlayerListName(player.getName());
+        String status = getStatus(player);
+        if (status != null) {
+            // Translate the status here
+            String translatedStatus = translateColorsAndFormatting(status, player);
+            if (placeholderAPIPresent && player.hasPermission("StatusPlugin.placeholders")) {
+                translatedStatus = PlaceholderAPI.setPlaceholders(player, translatedStatus);
+            }
+            String displayName = "[" + translatedStatus + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName();
+            displayName = ColourUtils.format(displayName); // Assign the result back to displayName
+            player.setDisplayName(displayName);
+            player.setPlayerListName(displayName);
+        } else {
+            player.setDisplayName(player.getName());
+            player.setPlayerListName(player.getName());
+        }
     }
-}
     public int getMaxStatusLength() {
         return maxStatusLength;
     }
@@ -132,11 +142,11 @@ public class StatusManager {
         player.setPlayerListName(player.getName());
         saveStatuses();
     }
-        public int calculateEffectiveLength(String text) {
-        Pattern pattern = Pattern.compile("&[0-9a-fk-or]");
+    public int calculateEffectiveLength(String text) {
+        Pattern pattern = Pattern.compile("&[0-9a-fk-or]|%[^%]+%");
         Matcher matcher = pattern.matcher(text);
-        String withoutColorCodes = matcher.replaceAll("");
-        return withoutColorCodes.length();
+        String withoutColorCodesAndPlaceholders = matcher.replaceAll("");
+        return withoutColorCodesAndPlaceholders.length();
     }
     public void reloadStatuses() {
         statusMap.clear();
