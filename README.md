@@ -28,6 +28,7 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 - The status of every player is saved to a file, so they will keep their status when they rejoin the server.
 - The Plugin supports `PlaceholderAPI v2.11.5`
   - The Plugin reloads statuses every 600 Game Ticks (30seconds) so the Placeholders can update themselves.
+  - The Plugin now got a Placeholder`%tubsstatusplugin_status_playername%` (playname should be changed out for the real Playername, Duuuh.)
 
 ## Permissions
 
