@@ -2,6 +2,10 @@ package de.tubyoub.utils;
 
 import org.bukkit.ChatColor;
 
+/**
+ * Enum representing different color codes in Minecraft.
+ * Each enum value represents a different color, with a corresponding input string and Minecraft color string.
+ */
 public enum ColourUtils {
     BLACK("&0", ChatColor.BLACK.toString()),
     DARK_BLUE("&1", ChatColor.DARK_BLUE.toString()),
@@ -29,22 +33,42 @@ public enum ColourUtils {
     private final String input;
     private final String MinecraftColor;
 
-    private ColourUtils(String input, String MinecraftColor) { this.input = input;
-    this.MinecraftColor = MinecraftColor; }
-
-    public String getMinecraftColor()
-    {
-    return this.MinecraftColor;
+    /**
+     * Constructor for the enum.
+     * @param input The input string representing the color.
+     * @param MinecraftColor The corresponding Minecraft color string.
+     */
+    private ColourUtils(String input, String MinecraftColor) {
+        this.input = input;
+        this.MinecraftColor = MinecraftColor;
     }
 
+    /**
+     * Getter for the Minecraft color string.
+     * @return The Minecraft color string.
+     */
+    public String getMinecraftColor() {
+        return this.MinecraftColor;
+    }
+
+    /**
+     * Getter for the input string.
+     * @return The input string.
+     */
     public String getInput() {
-    return this.input;
+        return this.input;
     }
+
+    /**
+     * Static method to format a message string, replacing input color strings with the corresponding Minecraft color strings.
+     * @param message The message string to format.
+     * @return The formatted message string.
+     */
     public static String format(String message) {
         String msg = message;
-            for (ColourUtils c : values()) {
-                msg = msg.replace(c.getInput(), c.getMinecraftColor());
-            }
-        return msg;
+        for (ColourUtils c : values()) {
+            msg = msg.replace(c.getInput(), c.getMinecraftColor());
         }
+        return msg;
     }
+}

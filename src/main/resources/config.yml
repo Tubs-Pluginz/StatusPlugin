@@ -1,2 +1,13 @@
-# Default configuration for StatusPlugin
+################################
+#      Tub's StatusPlugin      #
+#          by TubYoub          #
+################################
+# Don't change this value, it's changed by the plugin if needed
+fileversion: 1
+
+# maximum Character length a Status should be allowed to have.
+# default: 15
 maxStatusLength: 15
+# If the Chat formatter should be enabled (so the Plugin sends Messages with the Status in front of the Player name and formats colors).
+# default: true
+chatFormatter: true

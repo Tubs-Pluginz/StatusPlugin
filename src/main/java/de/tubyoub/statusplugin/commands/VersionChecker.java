@@ -1,6 +1,6 @@
 package de.tubyoub.statusplugin.commands;
-import com.google.gson.JsonParser;
 
+import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,13 +10,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 
+/**
+ * Class responsible for checking if a new version of the plugin is available.
+ */
 public class VersionChecker {
     private static final String project = "km0yAITg";
 
+    /**
+     * Checks if a new version of the plugin is available.
+     * @param version The current version of the plugin.
+     * @return A boolean indicating whether a new version is available.
+     */
     public static boolean isNewVersionAvailable(String version) {
         try {
             URL url = new URL("https://api.modrinth.com/v2/project/" + project + "/version");
@@ -50,6 +57,11 @@ public class VersionChecker {
         }
     }
 
+    /**
+     * Parses a JSON array into a list of maps.
+     * @param jsonArray The JSON array to be parsed.
+     * @return A list of maps representing the JSON array.
+     */
     private static List<Map<String, Object>> parseJsonArray(String jsonArray) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();

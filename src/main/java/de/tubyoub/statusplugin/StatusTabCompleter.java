@@ -9,12 +9,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 
+/**
+ * Class implementing the TabCompleter interface to provide tab completion functionality for the status plugin.
+ */
 public class StatusTabCompleter implements TabCompleter {
+
+    /**
+     * Method to handle tab completion for the status plugin commands.
+     * @param sender The sender of the command.
+     * @param command The command to be completed.
+     * @param alias The alias of the command.
+     * @param args The arguments of the command.
+     * @return A list of suggestions for tab completion.
+     */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
+            // Add suggestions for the first argument of the command
             suggestions.add("help");
             suggestions.add("remove");
             suggestions.add("setmaxlength");
@@ -22,13 +35,17 @@ public class StatusTabCompleter implements TabCompleter {
             suggestions.add("info");
             suggestions.add("reload");
         } else if (args.length == 2) {
+            // Add suggestions for the second argument of the command based on the first argument
             if (args[0].equalsIgnoreCase("remove")) {
+                // If the first argument is "remove", suggest the names of online players
                 suggestions.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()));
             } else if (args[0].equalsIgnoreCase("setmaxlength")) {
+                // If the first argument is "setmaxlength", suggest some default lengths
                 suggestions.add("10");
                 suggestions.add("20");
                 suggestions.add("30");
             } else if (args[0].equalsIgnoreCase("help")) {
+                // If the first argument is "help", suggest "colorcodes"
                 suggestions.add("colorcodes");
             }
         }
