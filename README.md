@@ -16,7 +16,7 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 
 - Set your own status with `/status <status>`
 - Remove your status with `/status remove`
-- Set status with formatting codes (for example to color them) with `/status &3<status>`
+- Set status with formatting codes (for example to color them) with `/status &3<status> (/status help colorcodes)`
 - Set other players' statuses with `/status <player> <status>` (requires `StatusPlugin.admin.setStatus` permission)
 - Remove other players' statuses with `/status remove <player>` (requires `StatusPlugin.admin.setStatus` permission)
 - Reload all statuses from file with `/status reload` (requires `StatusPlugin.admin.reload` permission) (Can be executed by console)
@@ -28,6 +28,7 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 - The status of every player is saved to a file, so they will keep their status when they rejoin the server.
 - The Plugin supports `PlaceholderAPI v2.11.5`
   - The Plugin reloads statuses every 600 Game Ticks (30seconds) so the Placeholders can update themselves.
+  - The Plugin now got a Placeholder`%tubsstatusplugin_status_playername%` (playname should be changed out for the real Playername, Duuuh.)
 
 ## Permissions
 
