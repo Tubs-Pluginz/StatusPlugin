@@ -3,7 +3,7 @@
 #          by TubYoub          #
 ################################
 # Don't change this value, it's changed by the plugin if needed
-fileversion: 1
+fileversion: 2
 
 # maximum Character length a Status should be allowed to have.
 # default: 15
@@ -11,3 +11,6 @@ maxStatusLength: 15
 # If the Chat formatter should be enabled (so the Plugin sends Messages with the Status in front of the Player name and formats colors).
 # default: true
 chatFormatter: true
+# If the Tablist name should be changed by the plugin or not. (restart your server so the changes will work correctly)
+# default: true
+changeTablistNames: true

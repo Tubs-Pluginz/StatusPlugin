@@ -1,6 +1,7 @@
 package de.tubyoub.statusplugin.Listener;
 
 import de.tubyoub.statusplugin.Managers.StatusManager;
+import de.tubyoub.statusplugin.StatusPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,13 +13,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class PlayerJoinListener implements Listener {
     private final StatusManager statusManager;
-
+    private final StatusPlugin plugin;
     /**
      * Constructor for the PlayerJoinListener class.
      * @param statusManager The StatusManager instance used to manage player statuses.
      */
-    public PlayerJoinListener(StatusManager statusManager) {
+    public PlayerJoinListener(StatusPlugin plugin, StatusManager statusManager) {
         this.statusManager = statusManager;
+        this.plugin = plugin;
     }
 
     /**
@@ -28,7 +30,9 @@ public class PlayerJoinListener implements Listener {
      */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        statusManager.updateDisplayName(player);
+        if (plugin.getConfigManager().isTablistFormatter()) {
+            Player player = event.getPlayer();
+            statusManager.updateDisplayName(player);
+        }
     }
 }

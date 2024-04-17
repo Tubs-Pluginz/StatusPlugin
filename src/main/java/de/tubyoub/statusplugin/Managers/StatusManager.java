@@ -65,7 +65,9 @@ public class StatusManager {
 
         // Store the original status, not the translated one
         statusMap.put(player.getUniqueId(), status);
-        updateDisplayName(player);
+        if (configManager.isTablistFormatter()) {
+            updateDisplayName(player);
+        }
         saveStatuses();
         return true;
     }
@@ -76,7 +78,10 @@ public class StatusManager {
      * @return The status of the player.
      */
     public String getStatus(Player player) {
-        return statusMap.get(player.getUniqueId());
+        if (statusMap.containsKey(player.getUniqueId())){
+            return statusMap.get(player.getUniqueId());
+        }
+        return "";
     }
 
 

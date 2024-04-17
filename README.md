@@ -7,8 +7,18 @@
 ![Static Badge](https://img.shields.io/badge/MC-1.18-green)
 ![Static Badge](https://img.shields.io/badge/MC-1.19-green)
 ![Static Badge](https://img.shields.io/badge/MC-1.20-green)
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/km0yAITg?logo=Modrinth&style=flat-square)
 
-[![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)](https://forthebadge.com)
+
+![forthebadge](https://forthebadge.com/images/badges/works-on-my-machine.svg)
+
+<p align="center">
+    <a href="https://discord.tubyoub.de">
+        <img src="https://i.imgur.com/JgDt1Fl.png" width="300">
+    </a>
+    <br/>
+    <i>Please join the Discord if you have questions!</i>
+</p>
 
 
 This is a Minecraft plugin for Spigot/Paper servers that allows players to set their own status, which is displayed in the tab list and above their heads in-game.
@@ -28,7 +38,9 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
 - The status of every player is saved to a file, so they will keep their status when they rejoin the server.
 - The Plugin supports `PlaceholderAPI v2.11.5`
   - The Plugin reloads statuses every 600 Game Ticks (30seconds) so the Placeholders can update themselves.
-  - The Plugin now got a Placeholder`%tubsstatusplugin_status_playername%` (playname should be changed out for the real Playername, Duuuh.)
+  - The Plugin got Placeholders:
+    - `%tubsstatusplugin_status_playername%` (playname should be changed out for the real Playername, Duuuh.)
+    - `%tubsstatusplugin_status%`
 
 ## Permissions
 

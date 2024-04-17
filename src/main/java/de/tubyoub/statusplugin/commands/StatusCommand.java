@@ -3,6 +3,7 @@ package de.tubyoub.statusplugin.commands;
 import de.tubyoub.statusplugin.Managers.StatusManager;
 import de.tubyoub.statusplugin.StatusPlugin;
 import de.tubyoub.utils.ColourUtils;
+import de.tubyoub.utils.VersionChecker;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -21,19 +22,19 @@ import java.util.stream.Collectors;
 public class StatusCommand implements CommandExecutor {
     String version;
     private final StatusManager statusManager;
-    private final VersionChecker versionChecker;
+    private final boolean newVersion;
     private StatusPlugin plugin;
 
     /**
      * Constructor for the StatusCommand class.
      *
      * @param statusManager  The StatusManager instance used to manage player statuses.
-     * @param versionChecker The VersionChecker instance used to check for new versions.
+     * @param newVersion If the plugin has a new Version..
      * @param version        The current version of the plugin.
      */
-    public StatusCommand(StatusManager statusManager, VersionChecker versionChecker, String version) {
+    public StatusCommand(StatusManager statusManager, boolean newVersion, String version) {
         this.statusManager = statusManager;
-        this.versionChecker = versionChecker;
+        this.newVersion = newVersion;
         this.version = version;
     }
 
@@ -248,7 +249,7 @@ public class StatusCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.GREEN + "Author: TubYoub");
         sender.sendMessage(ChatColor.GREEN + "Version: " + version);
 
-        if (VersionChecker.isNewVersionAvailable(version)) {
+        if (newVersion) {
             sender.sendMessage(ChatColor.YELLOW + "A new version is available! Update at: " + ChatColor.UNDERLINE + "https://modrinth.com/plugin/tubs-status-plugin/version/latest");
         } else {
             sender.sendMessage(ChatColor.GREEN + "You are using the latest version!");

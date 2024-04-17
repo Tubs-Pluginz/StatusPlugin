@@ -5,7 +5,7 @@ import de.tubyoub.statusplugin.Listener.PlayerJoinListener;
 import de.tubyoub.statusplugin.Managers.ConfigManager;
 import de.tubyoub.statusplugin.Managers.StatusManager;
 import de.tubyoub.statusplugin.commands.StatusCommand;
-import de.tubyoub.statusplugin.commands.VersionChecker;
+import de.tubyoub.utils.VersionChecker;
 import de.tubyoub.statusplugin.metrics.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,12 +18,13 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class extends JavaPlugin and represents the main entry point for the plugin.
  */
 public class StatusPlugin extends JavaPlugin {
-    private final String version = "1.3.3";
+    private final String version = "1.3.4";
     private StatusManager statusManager;
     private VersionChecker versionChecker;
     //private boolean placeholderAPIPresent;
     private ConfigManager configManager;
     private StatusPlaceholderExpansion placeholderExpansion;
+    private boolean newVersion;
     private int pluginId = 20463;
 
     /**
@@ -46,13 +47,14 @@ public class StatusPlugin extends JavaPlugin {
         // Initialize the StatusManager and VersionChecker
         this.statusManager = new StatusManager(this);
         this.versionChecker = new VersionChecker();
+        newVersion = VersionChecker.isNewVersionAvailable(version);
 
         // Register the PlayerJoinListener and ChatListener
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this.statusManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this ,this.statusManager), this);
         getServer().getPluginManager().registerEvents(new ChatListener(this.statusManager, configManager), this);
 
         // Set the executor and tab completer for the "status" command
-        StatusCommand statusCommand = new StatusCommand(statusManager,versionChecker,version);
+        StatusCommand statusCommand = new StatusCommand(statusManager,newVersion,version);
         getCommand("status").setExecutor(statusCommand);
         getCommand("status").setTabCompleter(new StatusTabCompleter());
 
@@ -69,12 +71,13 @@ public class StatusPlugin extends JavaPlugin {
         }
 
         // Schedule a task to update the display name of online players every 30 seconds
-        Bukkit.getScheduler().runTaskTimer(this, () -> {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                statusManager.updateDisplayName(player);
-            }
-        }, 0L, 600L); // 600 ticks = 30 seconds
-
+        if (configManager.isTablistFormatter()) {
+            Bukkit.getScheduler().runTaskTimer(this, () -> {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    statusManager.updateDisplayName(player);
+                }
+            }, 0L, 600L); // 600 ticks = 30 seconds
+        }
         getLogger().info("Tub's StatusPlugin successfully loaded");
         getLogger().warning(String.valueOf(this.getConfig()));
     }

@@ -16,7 +16,7 @@ public class ConfigManager {
     private YamlDocument config;
     private int maxStatusLength;
     private boolean chatFormatter;
-    private boolean changeTabListNames;
+    private boolean tablistFormatter;
     private final StatusPlugin plugin;
 
     public ConfigManager(StatusPlugin plugin) {
@@ -36,6 +36,7 @@ public class ConfigManager {
 
             maxStatusLength = config.getInt("maxStatusLength", 15);
             chatFormatter = config.getBoolean("chatFormatter", true);
+            tablistFormatter = config.getBoolean("changeTablistNames", true);
         } catch (IOException e) {
             plugin.getLogger().severe("Could not load configuration: " + e.getMessage());
         }
@@ -48,7 +49,17 @@ public class ConfigManager {
             plugin.getLogger().severe("Could not save configuration: " + e.getMessage());
         }
     }
-
+    public boolean isTablistFormatter(){
+        return tablistFormatter;
+    }
+    public void setTablistFormatter(boolean tablistFormatter){
+        if (this.tablistFormatter == tablistFormatter){
+            return;
+        }else {
+            this.tablistFormatter = tablistFormatter;
+            config.set("changeTablistNames", tablistFormatter);
+        }
+    }
     public boolean isChatFormatter(){
         return chatFormatter;
     }
