@@ -172,9 +172,29 @@ public class StatusCommand implements CommandExecutor {
         } else {
             plugin.sendPluginMessages(sender, "title");
             sender.sendMessage("Here you can see all available commands:");
-            // The rest of the code is self-explanatory and does not need documentation.
+            plugin.sendPluginMessages(sender, "title");
+                sender.sendMessage("Here you can see all available commands:");
+                sender.sendMessage("/status <status> - Set your own status.");
+                sender.sendMessage("/status remove - Remove your Status.");
+                sender.sendMessage("/status help colorcodes - Get all colorcodes to use in your status.");
+                if (sender.hasPermission("StatusPlugin.admin.setStatus")) {
+                    sender.sendMessage("/status remove <player> - Remove a player's status. (Admin)");
+                    sender.sendMessage("/status <player> <status> - Set a player's status. (Admin)");
+                }
+                sender.sendMessage("/status help colors - Show a list of color codes.");
+                if (sender.hasPermission("StatusPlugin.admin.reload")) {
+                    sender.sendMessage("/status reload - Reload all statuses. (Admin)");
+                }
+                if (sender.hasPermission("StatusPlugin.admin.setMaxlength")) {
+                    sender.sendMessage("/status setmaxlength <length> - Set the max length of status. (Admin)");
+                }
+                if (sender.hasPermission("StatusPlugin.admin.resetMaxlength")) {
+                    sender.sendMessage("/status resetmaxlength - Reset the max length of status to default. (Admin)");
+                }
+                sender.sendMessage("/status info - Show info about the plugin.");
+                plugin.sendPluginMessages(sender, "line");
+            }
         }
-    }
 
     /**
      * Displays the available color and formatting codes to the sender.

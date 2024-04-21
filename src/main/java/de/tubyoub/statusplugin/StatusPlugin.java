@@ -18,7 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class extends JavaPlugin and represents the main entry point for the plugin.
  */
 public class StatusPlugin extends JavaPlugin {
-    private final String version = "1.3.4";
+    private final String version = "1.3.5";
     private StatusManager statusManager;
     private VersionChecker versionChecker;
     //private boolean placeholderAPIPresent;
