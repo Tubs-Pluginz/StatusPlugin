@@ -4,6 +4,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 /**
  * This class extends PlaceholderExpansion from the PlaceholderAPI.
  * It provides a way to register and use placeholders related to the StatusPlugin.
@@ -73,9 +75,11 @@ public class StatusPlaceholderExpansion extends PlaceholderExpansion {
      */
     @Override
     public String onPlaceholderRequest(Player player, String identifier){
-
         if(player == null){
             return "";
+        }
+        if (Objects.equals(identifier, "status")){
+            return plugin.getStatusManager().getStatus(player);
         }
 
         // %tubsstatusplugin_status_playername%
