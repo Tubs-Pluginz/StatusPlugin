@@ -97,6 +97,13 @@ public class StatusCommand implements CommandExecutor {
                     player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Usage: /status remove [player]");
                 }
                 return true;
+            case "group":
+                if (args.length == 2) {
+                    handleGroupCommand(player, args[1]);
+                } else {
+                    player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Usage: /status group <groupname>");
+                }
+                return true;
             default:
                 handleDefaultCommand(player, args);
                 return true;
@@ -129,13 +136,29 @@ public class StatusCommand implements CommandExecutor {
             player.sendMessage("Invalid player name: " + args[0]);
             return;
         }
-        if (!player.hasPermission("StatusPlugin.setStatus")) {
-            player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " You don't have permission to set your own status.");
+        if (!plugin.getConfigManager().isGroupMode()) {
+            if (!player.hasPermission("StatusPlugin.setStatus")) {
+                player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " You don't have permission to set your own status.");
+                return;
+            }
+            String status = String.join(" ", args);
+
+                if (statusManager.setStatus(player, status, player)) {
+                    player.sendMessage(plugin.getPluginPrefix() + " Your status has been set to: " + "[" + ColourUtils.format(statusManager.getStatus(player)) + ChatColor.RESET + "]");
+                }
+        }else {
+            player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Group mode is enabled.");
+        }
+    }
+
+    private void handleGroupCommand(Player player, String groupName) {
+        if (!statusManager.isGroupMode()) {
+            player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Group mode is not enabled.");
             return;
         }
-        String status = String.join(" ", args);
-        if (statusManager.setStatus(player, status, player)) {
-            player.sendMessage(plugin.getPluginPrefix() + " Your status has been set to: " + "[" + ColourUtils.format(statusManager.getStatus(player)) + ChatColor.RESET + "]");
+
+        if (statusManager.setGroupStatus(player, groupName)) {
+            player.sendMessage(plugin.getPluginPrefix() + ChatColor.GREEN + " Your status has been set to the " + groupName + " group.");
         }
     }
 
@@ -177,6 +200,10 @@ public class StatusCommand implements CommandExecutor {
                 sender.sendMessage("/status <status> - Set your own status.");
                 sender.sendMessage("/status remove - Remove your Status.");
                 sender.sendMessage("/status help colorcodes - Get all colorcodes to use in your status.");
+                if (statusManager.isGroupMode()) {
+                    sender.sendMessage("/status group <groupname> - Set your status to a predefined group.");
+                    sender.sendMessage("/group <groupname> - Set your status to a predefined group.");
+                }
                 if (sender.hasPermission("StatusPlugin.admin.setStatus")) {
                     sender.sendMessage("/status remove <player> - Remove a player's status. (Admin)");
                     sender.sendMessage("/status <player> <status> - Set a player's status. (Admin)");

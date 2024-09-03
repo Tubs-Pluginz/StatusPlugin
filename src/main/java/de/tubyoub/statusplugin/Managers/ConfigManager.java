@@ -10,6 +10,8 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ConfigManager {
@@ -17,6 +19,8 @@ public class ConfigManager {
     private int maxStatusLength;
     private boolean chatFormatter;
     private boolean tablistFormatter;
+    private boolean groupMode;
+    private Map<String, String> statusGroups;
     private final StatusPlugin plugin;
 
     public ConfigManager(StatusPlugin plugin) {
@@ -30,15 +34,27 @@ public class ConfigManager {
                     GeneralSettings.DEFAULT,
                     LoaderSettings.builder().setAutoUpdate(true).build(),
                     DumperSettings.DEFAULT,
-
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("fileversion"))
                             .setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build());
 
             maxStatusLength = config.getInt("maxStatusLength", 15);
             chatFormatter = config.getBoolean("chatFormatter", true);
             tablistFormatter = config.getBoolean("changeTablistNames", true);
+            groupMode = config.getBoolean("groupMode", false);
+            loadStatusGroups();
         } catch (IOException e) {
             plugin.getLogger().severe("Could not load configuration: " + e.getMessage());
+        }
+    }
+
+    private void loadStatusGroups() {
+        statusGroups = new HashMap<>();
+        if (config.contains("statusGroups")) {
+            for (Object key : config.getSection("statusGroups").getKeys()) {
+                String groupName = key.toString();
+                String status = config.getString("statusGroups." + groupName + ".status");
+                statusGroups.put(groupName, status);
+            }
         }
     }
 
@@ -49,28 +65,29 @@ public class ConfigManager {
             plugin.getLogger().severe("Could not save configuration: " + e.getMessage());
         }
     }
-    public boolean isTablistFormatter(){
+
+    public boolean isTablistFormatter() {
         return tablistFormatter;
     }
-    public void setTablistFormatter(boolean tablistFormatter){
-        if (this.tablistFormatter == tablistFormatter){
-            return;
-        }else {
+
+    public void setTablistFormatter(boolean tablistFormatter) {
+        if (this.tablistFormatter != tablistFormatter) {
             this.tablistFormatter = tablistFormatter;
             config.set("changeTablistNames", tablistFormatter);
         }
     }
-    public boolean isChatFormatter(){
+
+    public boolean isChatFormatter() {
         return chatFormatter;
     }
-    public void setChatFormatter(boolean chatFormatter){
-        if (this.chatFormatter == chatFormatter){
-            return;
-        }else {
+
+    public void setChatFormatter(boolean chatFormatter) {
+        if (this.chatFormatter != chatFormatter) {
             this.chatFormatter = chatFormatter;
             config.set("chatFormatter", chatFormatter);
         }
     }
+
     public int getMaxStatusLength() {
         return maxStatusLength;
     }
@@ -85,6 +102,20 @@ public class ConfigManager {
         this.maxStatusLength = 15;
         config.set("maxStatusLength", 15);
         saveConfig();
+    }
+
+    public boolean isGroupMode() {
+        return groupMode;
+    }
+
+    public void setGroupMode(boolean groupMode) {
+        this.groupMode = groupMode;
+        config.set("groupMode", groupMode);
+        saveConfig();
+    }
+
+    public Map<String, String> getStatusGroups() {
+        return statusGroups;
     }
 
     public void reloadConfig() {

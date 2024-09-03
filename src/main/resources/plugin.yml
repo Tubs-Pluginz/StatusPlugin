@@ -7,9 +7,14 @@ softdepend: [PlaceholderAPI]
 commands:
   status:
     description: Set a player's status, get info, get help, reload the plugin, set/reset max length
+  group:
+    description: Set a player's status group
 permissions:
   StatusPlugin.setStatus:
     description: Allows setting own status. (default player)
+    default: true
+  StatusPlugin.group.set:
+    description: Allows setting own status group. (default player)
     default: true
   StatusPlugin.admin.setStatus:
     description: Allows setting other players' statuses. (default op)

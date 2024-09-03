@@ -4,7 +4,10 @@ import de.tubyoub.statusplugin.Listener.ChatListener;
 import de.tubyoub.statusplugin.Listener.PlayerJoinListener;
 import de.tubyoub.statusplugin.Managers.ConfigManager;
 import de.tubyoub.statusplugin.Managers.StatusManager;
+import de.tubyoub.statusplugin.commands.GroupCommand;
 import de.tubyoub.statusplugin.commands.StatusCommand;
+import de.tubyoub.statusplugin.commands.tabCompleter.GroupTabCompleter;
+import de.tubyoub.statusplugin.commands.tabCompleter.StatusTabCompleter;
 import de.tubyoub.utils.VersionChecker;
 import de.tubyoub.statusplugin.metrics.Metrics;
 import org.bukkit.Bukkit;
@@ -13,15 +16,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+
 /**
  * Main class for the StatusPlugin.
  * This class extends JavaPlugin and represents the main entry point for the plugin.
  */
 public class StatusPlugin extends JavaPlugin {
-    private final String version = "1.3.5";
+    private final String version = "1.4";
     private StatusManager statusManager;
     private VersionChecker versionChecker;
-    //private boolean placeholderAPIPresent;
+    private boolean placeholderAPIPresent = false;
     private ConfigManager configManager;
     private StatusPlaceholderExpansion placeholderExpansion;
     private boolean newVersion;
@@ -51,12 +56,16 @@ public class StatusPlugin extends JavaPlugin {
 
         // Register the PlayerJoinListener and ChatListener
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this ,this.statusManager), this);
-        getServer().getPluginManager().registerEvents(new ChatListener(this.statusManager, configManager), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
 
         // Set the executor and tab completer for the "status" command
         StatusCommand statusCommand = new StatusCommand(statusManager,newVersion,version);
         getCommand("status").setExecutor(statusCommand);
-        getCommand("status").setTabCompleter(new StatusTabCompleter());
+        getCommand("status").setTabCompleter(new StatusTabCompleter(this));
+
+        GroupCommand groupCommand = new GroupCommand(this);
+        getCommand("group").setExecutor(groupCommand);
+        getCommand("group").setTabCompleter(new GroupTabCompleter(this));
 
         // Initialize the Metrics
         Metrics metrics = new Metrics(this, pluginId);
@@ -65,6 +74,7 @@ public class StatusPlugin extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             placeholderExpansion = new StatusPlaceholderExpansion(this);
             placeholderExpansion.register();
+            placeholderAPIPresent = true;
             getLogger().info("Tub's StatusPlugin will now use PlaceholderAPI");
         } else {
             getLogger().warning("Could not find PlaceholderAPI! Tub's StatusPlugin will run without it..");
@@ -97,7 +107,6 @@ public class StatusPlugin extends JavaPlugin {
                 + ChatColor.GOLD + "-");
         }
     }
-
     /**
      * Method to get the plugin prefix.
      * @return The plugin prefix.
@@ -122,6 +131,9 @@ public class StatusPlugin extends JavaPlugin {
         return statusManager;
     }
 
+    public boolean isPlaceholderAPIPresent() {
+        return placeholderAPIPresent;
+    }
     /**
      * This method is called when the plugin is disabled.
      * It saves the statuses.

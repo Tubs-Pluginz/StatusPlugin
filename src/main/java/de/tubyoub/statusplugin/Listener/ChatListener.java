@@ -2,6 +2,7 @@ package de.tubyoub.statusplugin.Listener;
 
 import de.tubyoub.statusplugin.Managers.ConfigManager;
 import de.tubyoub.statusplugin.Managers.StatusManager;
+import de.tubyoub.statusplugin.StatusPlugin;
 import de.tubyoub.utils.ColourUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -18,15 +19,15 @@ import org.bukkit.event.player.PlayerChatEvent;
 public class ChatListener implements Listener {
     private final StatusManager statusManager;
     private final ConfigManager configManager;
+    private final StatusPlugin plugin;
 
     /**
      * Constructor for the ChatListener class.
-     * @param statusManager The StatusManager instance used to manage player statuses.
-     * @param configManager The ConfigManager instance used to manage the plugin configuration.
      */
-    public ChatListener(StatusManager statusManager, ConfigManager configManager) {
-        this.statusManager = statusManager;
-        this.configManager = configManager;
+    public ChatListener(StatusPlugin plugin) {
+        this.plugin = plugin;
+        this.statusManager = plugin.getStatusManager();
+        this.configManager = plugin.getConfigManager();
     }
 
     /**
@@ -45,7 +46,9 @@ public class ChatListener implements Listener {
 
             // Translate the player's status and add placeholders
             String status = statusManager.translateColorsAndFormatting(statusManager.getStatus(player),player);
-            status = PlaceholderAPI.setPlaceholders(player, status);
+            if (plugin.isPlaceholderAPIPresent()) {
+                status = PlaceholderAPI.setPlaceholders(player, status);
+            }
 
             // Format the broadcast message
             String broadcastMessage;
