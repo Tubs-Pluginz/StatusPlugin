@@ -18,10 +18,10 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class extends JavaPlugin and represents the main entry point for the plugin.
  */
 public class StatusPlugin extends JavaPlugin {
-    private final String version = "1.3.5";
+    private final String version = "1.4";
     private StatusManager statusManager;
     private VersionChecker versionChecker;
-    //private boolean placeholderAPIPresent;
+    private boolean placeholderAPIPresent = false;
     private ConfigManager configManager;
     private StatusPlaceholderExpansion placeholderExpansion;
     private boolean newVersion;
@@ -51,7 +51,7 @@ public class StatusPlugin extends JavaPlugin {
 
         // Register the PlayerJoinListener and ChatListener
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this ,this.statusManager), this);
-        getServer().getPluginManager().registerEvents(new ChatListener(this.statusManager, configManager), this);
+        getServer().getPluginManager().registerEvents(new ChatListener(this), this);
 
         // Set the executor and tab completer for the "status" command
         StatusCommand statusCommand = new StatusCommand(statusManager,newVersion,version);
@@ -65,6 +65,7 @@ public class StatusPlugin extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             placeholderExpansion = new StatusPlaceholderExpansion(this);
             placeholderExpansion.register();
+            placeholderAPIPresent = true;
             getLogger().info("Tub's StatusPlugin will now use PlaceholderAPI");
         } else {
             getLogger().warning("Could not find PlaceholderAPI! Tub's StatusPlugin will run without it..");
@@ -122,6 +123,9 @@ public class StatusPlugin extends JavaPlugin {
         return statusManager;
     }
 
+    public boolean isPlaceholderAPIPresent() {
+        return placeholderAPIPresent;
+    }
     /**
      * This method is called when the plugin is disabled.
      * It saves the statuses.
