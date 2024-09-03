@@ -3,7 +3,7 @@
 #          by TubYoub          #
 ################################
 # Don't change this value, it's changed by the plugin if needed
-fileversion: 2
+fileversion: 3
 
 # maximum Character length a Status should be allowed to have.
 # default: 15
@@ -14,3 +14,16 @@ chatFormatter: true
 # If the Tablist name should be changed by the plugin or not. (restart your server so the changes will work correctly)
 # default: true
 changeTablistNames: true
+# Enable group mode for statuses
+# When enabled, players can only choose from predefined status groups
+# default: false
+groupMode: false
+# Define status groups
+# Each group has a name and a status
+statusGroups:
+  t1:
+    status: 'Team1'
+  t2:
+    status: 'Team2'
+  t3:
+    status: 'Team3'

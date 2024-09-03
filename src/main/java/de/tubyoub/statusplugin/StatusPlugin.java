@@ -4,7 +4,10 @@ import de.tubyoub.statusplugin.Listener.ChatListener;
 import de.tubyoub.statusplugin.Listener.PlayerJoinListener;
 import de.tubyoub.statusplugin.Managers.ConfigManager;
 import de.tubyoub.statusplugin.Managers.StatusManager;
+import de.tubyoub.statusplugin.commands.GroupCommand;
 import de.tubyoub.statusplugin.commands.StatusCommand;
+import de.tubyoub.statusplugin.commands.tabCompleter.GroupTabCompleter;
+import de.tubyoub.statusplugin.commands.tabCompleter.StatusTabCompleter;
 import de.tubyoub.utils.VersionChecker;
 import de.tubyoub.statusplugin.metrics.Metrics;
 import org.bukkit.Bukkit;
@@ -12,6 +15,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
 
 /**
  * Main class for the StatusPlugin.
@@ -56,7 +61,11 @@ public class StatusPlugin extends JavaPlugin {
         // Set the executor and tab completer for the "status" command
         StatusCommand statusCommand = new StatusCommand(statusManager,newVersion,version);
         getCommand("status").setExecutor(statusCommand);
-        getCommand("status").setTabCompleter(new StatusTabCompleter());
+        getCommand("status").setTabCompleter(new StatusTabCompleter(this));
+
+        GroupCommand groupCommand = new GroupCommand(this);
+        getCommand("group").setExecutor(groupCommand);
+        getCommand("group").setTabCompleter(new GroupTabCompleter(this));
 
         // Initialize the Metrics
         Metrics metrics = new Metrics(this, pluginId);
@@ -98,7 +107,6 @@ public class StatusPlugin extends JavaPlugin {
                 + ChatColor.GOLD + "-");
         }
     }
-
     /**
      * Method to get the plugin prefix.
      * @return The plugin prefix.

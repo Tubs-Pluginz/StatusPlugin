@@ -39,7 +39,7 @@ public class StatusManager {
      */
     public StatusManager(StatusPlugin plugin) {
         this.plugin = plugin;
-        this.placeholderAPIPresent = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
+        this.placeholderAPIPresent = plugin.isPlaceholderAPIPresent();
         this.configManager = plugin.getConfigManager();
         maxStatusLength = configManager.getMaxStatusLength();
         this.statusFile = new File(plugin.getDataFolder(), "statuses.yml");
@@ -54,7 +54,12 @@ public class StatusManager {
      * @return A boolean indicating whether the status was set successfully.
      */
     public boolean setStatus(Player player, String status, CommandSender sender) {
-        if (status.contains("&_")){
+        if (configManager.isGroupMode() && !sender.hasPermission("StatusPlugin.admin.setStatus")) {
+            sender.sendMessage(ChatColor.RED + "Group mode is enabled. Use /status group <groupname> to set your status.");
+            return false;
+        }
+
+        if (status.contains("&_")) {
             status = status.replace("&_", " ");
         }
         String translatedStatus = translateColorsAndFormatting(status, sender);
@@ -63,7 +68,27 @@ public class StatusManager {
             return false;
         }
 
-        // Store the original status, not the translated one
+        statusMap.put(player.getUniqueId(), status);
+        if (configManager.isTablistFormatter()) {
+            updateDisplayName(player);
+        }
+        saveStatuses();
+        return true;
+    }
+
+    public boolean setGroupStatus(Player player, String groupName) {
+        Map<String, String> statusGroups = configManager.getStatusGroups();
+        if (!statusGroups.containsKey(groupName)) {
+            player.sendMessage(ChatColor.RED + "Invalid group name.");
+            return false;
+        }
+
+        if (!player.hasPermission("StatusPlugin.group.set" + groupName)) {
+            player.sendMessage(plugin.getPluginPrefix() +  ChatColor.RED + "You don't have permission to use this status group.");
+            return false;
+        }
+
+        String status = statusGroups.get(groupName);
         statusMap.put(player.getUniqueId(), status);
         if (configManager.isTablistFormatter()) {
             updateDisplayName(player);
@@ -221,6 +246,14 @@ public class StatusManager {
         Matcher matcher = pattern.matcher(text);
         String withoutColorCodesAndPlaceholders = matcher.replaceAll("");
         return withoutColorCodesAndPlaceholders.length();
+    }
+
+    public boolean isGroupMode() {
+        return configManager.isGroupMode();
+    }
+
+    public Map<String, String> getStatusGroups() {
+        return configManager.getStatusGroups();
     }
 
     /**
