@@ -7,6 +7,7 @@
 ![Static Badge](https://img.shields.io/badge/MC-1.18-green)
 ![Static Badge](https://img.shields.io/badge/MC-1.19-green)
 ![Static Badge](https://img.shields.io/badge/MC-1.20-green)
+![Static Badge](https://img.shields.io/badge/MC-1.21-green)
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/km0yAITg?logo=Modrinth&style=flat-square)
 
 
@@ -41,10 +42,14 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
   - The Plugin got Placeholders:
     - `%tubsstatusplugin_status_playername%` (playname should be changed out for the real Playername, Duuuh.)
     - `%tubsstatusplugin_status%`
+- Groupmode
+  - turn on Group Mode in the Config and preconfigure set Groups for Players
+  - A Player will not be able to set a fully custom status but he can use one of the preconfigured Groups.
 
 ## Permissions
 
 - `StatusPlugin.setStatus`: Allows a player to set their own status and remove it. (default: `true`)
+- `StatusPlugin.group.set`: Allows players to set their status as a group status. (default: `true`)
 - `StatusPlugin.admin.setStatus`: Allows a player to set and remove other players' statuses. (default: `false`)
 - `StatusPlugin.admin.reload`: Allows a player to reload all statuses.(default: `false`)
 - `StatusPlugin.admin.setMaxlength:` Allows a player to set the maximum length of statuses. (default: `false`)
