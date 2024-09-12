@@ -20,6 +20,8 @@ public class ConfigManager {
     private boolean chatFormatter;
     private boolean tablistFormatter;
     private boolean groupMode;
+    private String openingCharacter;
+    private String closingCharacter;
     private Map<String, String> statusGroups;
     private final StatusPlugin plugin;
 
@@ -41,6 +43,8 @@ public class ConfigManager {
             chatFormatter = config.getBoolean("chatFormatter", true);
             tablistFormatter = config.getBoolean("changeTablistNames", true);
             groupMode = config.getBoolean("groupMode", false);
+            openingCharacter = config.getString("openingCharacter", "[");
+            closingCharacter = config.getString("closingCharacter", "]");
             loadStatusGroups();
         } catch (IOException e) {
             plugin.getLogger().severe("Could not load configuration: " + e.getMessage());
@@ -112,6 +116,12 @@ public class ConfigManager {
         this.groupMode = groupMode;
         config.set("groupMode", groupMode);
         saveConfig();
+    }
+    public String getOpeningCharacter() {
+        return openingCharacter;
+    }
+    public String getClosingCharacter() {
+        return closingCharacter;
     }
 
     public Map<String, String> getStatusGroups() {
