@@ -124,7 +124,7 @@ public class StatusManager {
             if (placeholderAPIPresent && player.hasPermission("StatusPlugin.placeholders")) {
                 translatedStatus = PlaceholderAPI.setPlaceholders(player, translatedStatus);
             }
-            String displayName = "[" + translatedStatus + ChatColor.RESET + "] " + ChatColor.WHITE + player.getName();
+            String displayName = configManager.getOpeningCharacter() + translatedStatus + ChatColor.RESET + configManager.getClosingCharacter() + " " + ChatColor.WHITE + player.getName();
             displayName = ColourUtils.format(displayName);
             player.setDisplayName(displayName);
             player.setPlayerListName(displayName);

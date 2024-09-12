@@ -3,7 +3,7 @@
 #          by TubYoub          #
 ################################
 # Don't change this value, it's changed by the plugin if needed
-fileversion: 3
+fileversion: 4
 
 # maximum Character length a Status should be allowed to have.
 # default: 15
@@ -27,3 +27,8 @@ statusGroups:
     status: 'Team2'
   t3:
     status: 'Team3'
+
+# Opening and closing characters for the status
+# default: '[' & ']'
+openingCharacter: '['
+closingCharacter: ']'

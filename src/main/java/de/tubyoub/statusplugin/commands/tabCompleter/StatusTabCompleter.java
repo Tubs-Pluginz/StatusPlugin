@@ -40,7 +40,7 @@ public class StatusTabCompleter implements TabCompleter {
             suggestions.add("resetmaxlength");
             suggestions.add("info");
             suggestions.add("reload");
-            suggestions.add("grave");
+            suggestions.add("group");
         } else if (args.length == 2) {
             // Add suggestions for the second argument of the command based on the first argument
             if (args[0].equalsIgnoreCase("remove")) {
@@ -54,7 +54,7 @@ public class StatusTabCompleter implements TabCompleter {
             } else if (args[0].equalsIgnoreCase("help")) {
                 // If the first argument is "help", suggest "colorcodes"
                 suggestions.add("colorcodes");
-            } else if (args[0].equalsIgnoreCase("grave")) {
+            } else if (args[0].equalsIgnoreCase("group")) {
                 // If the first argument is the group command, suggest available groups
                 suggestions.addAll(plugin.getConfigManager().getStatusGroups().keySet());
             }
