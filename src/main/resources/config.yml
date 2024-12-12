@@ -5,6 +5,9 @@
 # Don't change this value, it's changed by the plugin if needed
 fileversion: 4
 
+# Check for updates on startup
+# default: true
+checkUpdate: true
 # maximum Character length a Status should be allowed to have.
 # default: 15
 maxStatusLength: 15
