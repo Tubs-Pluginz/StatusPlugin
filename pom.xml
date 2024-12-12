@@ -6,7 +6,7 @@
 
     <groupId>de.tubyoub</groupId>
     <artifactId>StatusPlugin</artifactId>
-    <version>1.4.1</version>
+    <version>1.5</version>
     <packaging>jar</packaging>
 
     <name>Tub's Status Plugin</name>

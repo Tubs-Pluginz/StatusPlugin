@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * This class extends JavaPlugin and represents the main entry point for the plugin.
  */
 public class StatusPlugin extends JavaPlugin {
-    private final String version = "1.4.1";
+    private final String version = "1.5";
     private StatusManager statusManager;
     private VersionChecker versionChecker;
     private boolean placeholderAPIPresent = false;
