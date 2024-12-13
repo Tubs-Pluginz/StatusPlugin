@@ -120,7 +120,7 @@ public class StatusManager {
     public void updateDisplayName(Player player) {
         String status = getStatus(player);
 
-        if (status != null) {
+        if (status != "") {
             String translatedStatus = translateColorsAndFormatting(status, player);
             if (plugin.isLuckPermsPresent() && player.hasPermission("StatusPlugin.placeholders")) {
                 translatedStatus.replace("%LP_prefix%", Objects.requireNonNull(plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix()));
