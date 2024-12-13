@@ -30,7 +30,7 @@ public class VersionChecker {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("User-Agent", "BTPluginz/GravePlugin/"+ version + " (github@tubyoub.de)");
+            connection.setRequestProperty("User-Agent", "BTPluginz/TubsStatusPlugin/"+ version + " (github@tubyoub.de)");
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
