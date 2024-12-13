@@ -124,7 +124,7 @@ public class StatusManager {
             String translatedStatus = translateColorsAndFormatting(status, player);
             if (plugin.isLuckPermsPresent() && player.hasPermission("StatusPlugin.placeholders")) {
                 translatedStatus.replace("%LP_prefix%", Objects.requireNonNull(plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix()));
-                translatedStatus.replace("%LP_prefix%", Objects.requireNonNull(plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getSuffix()));
+                translatedStatus.replace("%LP_suffix%", Objects.requireNonNull(plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getSuffix()));
             }
             if (placeholderAPIPresent && player.hasPermission("StatusPlugin.placeholders")) {
                 translatedStatus = PlaceholderAPI.setPlaceholders(player, translatedStatus);
