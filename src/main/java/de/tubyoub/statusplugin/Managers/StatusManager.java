@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,6 +122,10 @@ public class StatusManager {
 
         if (status != null) {
             String translatedStatus = translateColorsAndFormatting(status, player);
+            if (plugin.isLuckPermsPresent() && player.hasPermission("StatusPlugin.placeholders")) {
+                translatedStatus.replace("%LP_prefix%", Objects.requireNonNull(plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix()));
+                translatedStatus.replace("%LP_prefix%", Objects.requireNonNull(plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getSuffix()));
+            }
             if (placeholderAPIPresent && player.hasPermission("StatusPlugin.placeholders")) {
                 translatedStatus = PlaceholderAPI.setPlaceholders(player, translatedStatus);
             }

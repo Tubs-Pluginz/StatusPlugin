@@ -10,6 +10,7 @@ import de.tubyoub.statusplugin.commands.tabCompleter.GroupTabCompleter;
 import de.tubyoub.statusplugin.commands.tabCompleter.StatusTabCompleter;
 import de.tubyoub.utils.VersionChecker;
 import de.tubyoub.statusplugin.metrics.Metrics;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -31,6 +32,8 @@ public class StatusPlugin extends JavaPlugin {
     private StatusPlaceholderExpansion placeholderExpansion;
     private boolean newVersion;
     private VersionChecker.VersionInfo versionInfo;
+    private LuckPerms luckPerms;
+    private boolean luckPermsPresent = false;
 
 
     /**
@@ -116,6 +119,14 @@ public class StatusPlugin extends JavaPlugin {
             getLogger().warning("Could not find PlaceholderAPI! Tub's StatusPlugin will run without it..");
         }
 
+        if (Bukkit.getPluginManager().getPlugin("LuckPerms") != null) {
+            this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
+            luckPermsPresent = true;
+            getLogger().info("Tub's StatusPlugin will now hook into LuckPerms");
+        } else {
+            getLogger().warning("Could not find LuckPerms! Tub's StatusPlugin will run without it..");
+        }
+
         // Schedule a task to update the display name of online players every 30 seconds
         if (configManager.isTablistFormatter()) {
             Bukkit.getScheduler().runTaskTimer(this, () -> {
@@ -172,6 +183,12 @@ public class StatusPlugin extends JavaPlugin {
     }
     public VersionChecker.VersionInfo getVersionInfo() {
         return versionInfo;
+    }
+    public LuckPerms getLuckPerms() {
+        return luckPerms;
+    }
+    public boolean isLuckPermsPresent() {
+        return luckPermsPresent;
     }
     /**
      * This method is called when the plugin is disabled.
