@@ -7,7 +7,7 @@
 ![Static Badge](https://img.shields.io/badge/MC-1.18-green)
 ![Static Badge](https://img.shields.io/badge/MC-1.19-green)
 ![Static Badge](https://img.shields.io/badge/MC-1.20-green)
-![Static Badge](https://img.shields.io/badge/MC-1.21-green)
+![Static Badge](https://img.shields.io/badge/MC-1.21.x-green)
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/km0yAITg?logo=Modrinth&style=flat-square)
 
 
@@ -42,6 +42,10 @@ This is a Minecraft plugin for Spigot/Paper servers that allows players to set t
   - The Plugin got Placeholders:
     - `%tubsstatusplugin_status_playername%` (playname should be changed out for the real Playername, Duuuh.)
     - `%tubsstatusplugin_status%`
+- The Plugin Supports `LuckPerms v5.4`
+  - The Plugin supports LuckPerms prefix and suffix.
+    - `%LP_prefix&%`
+    - `%LP_suffix%`
 - Groupmode
   - turn on Group Mode in the Config and preconfigure set Groups for Players
   - A Player will not be able to set a fully custom status but he can use one of the preconfigured Groups.

@@ -3,7 +3,7 @@ version: '${project.version}'
 main: de.tubyoub.statusplugin.StatusPlugin
 api-version: 1.13
 author: TubYoub
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, LuckPerms]
 commands:
   status:
     description: Set a player's status, get info, get help, reload the plugin, set/reset max length

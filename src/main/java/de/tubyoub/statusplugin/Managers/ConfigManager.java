@@ -6,6 +6,7 @@ import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
 import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
+import dev.dejvokep.boostedyaml.settings.updater.MergeRule;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.util.Objects;
 public class ConfigManager {
     private YamlDocument config;
     private int maxStatusLength;
+    private boolean checkUpdate;
     private boolean chatFormatter;
     private boolean tablistFormatter;
     private boolean groupMode;
@@ -37,9 +39,15 @@ public class ConfigManager {
                     LoaderSettings.builder().setAutoUpdate(true).build(),
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setVersioning(new BasicVersioning("fileversion"))
-                            .setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS).build());
+                            .setOptionSorting(UpdaterSettings.OptionSorting.SORT_BY_DEFAULTS)
+                            .setMergeRule(MergeRule.MAPPINGS, true)
+                            .setMergeRule(MergeRule.MAPPING_AT_SECTION, true)
+                            .setMergeRule(MergeRule.SECTION_AT_MAPPING, true)
+                            .setKeepAll(true)
+                            .build());
 
             maxStatusLength = config.getInt("maxStatusLength", 15);
+            checkUpdate = config.getBoolean("checkUpdate", true);
             chatFormatter = config.getBoolean("chatFormatter", true);
             tablistFormatter = config.getBoolean("changeTablistNames", true);
             groupMode = config.getBoolean("groupMode", false);
@@ -106,6 +114,10 @@ public class ConfigManager {
         this.maxStatusLength = 15;
         config.set("maxStatusLength", 15);
         saveConfig();
+    }
+
+    public boolean isCheckUpdate() {
+        return checkUpdate;
     }
 
     public boolean isGroupMode() {

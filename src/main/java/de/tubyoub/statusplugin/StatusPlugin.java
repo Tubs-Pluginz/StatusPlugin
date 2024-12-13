@@ -10,27 +10,31 @@ import de.tubyoub.statusplugin.commands.tabCompleter.GroupTabCompleter;
 import de.tubyoub.statusplugin.commands.tabCompleter.StatusTabCompleter;
 import de.tubyoub.utils.VersionChecker;
 import de.tubyoub.statusplugin.metrics.Metrics;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-
 /**
  * Main class for the StatusPlugin.
  * This class extends JavaPlugin and represents the main entry point for the plugin.
  */
 public class StatusPlugin extends JavaPlugin {
-    private final String version = "1.4.1";
+    private final String version = "1.5";
+    private final String project = "km0yAITg";
+     private int pluginId = 20463;
     private StatusManager statusManager;
     private VersionChecker versionChecker;
     private boolean placeholderAPIPresent = false;
     private ConfigManager configManager;
     private StatusPlaceholderExpansion placeholderExpansion;
     private boolean newVersion;
-    private int pluginId = 20463;
+    private VersionChecker.VersionInfo versionInfo;
+    private LuckPerms luckPerms;
+    private boolean luckPermsPresent = false;
+
 
     /**
      * This method is called when the plugin is enabled.
@@ -50,9 +54,44 @@ public class StatusPlugin extends JavaPlugin {
         configManager.loadConfig();
 
         // Initialize the StatusManager and VersionChecker
-        this.statusManager = new StatusManager(this);
-        this.versionChecker = new VersionChecker();
-        newVersion = VersionChecker.isNewVersionAvailable(version);
+        if (configManager.isCheckUpdate()) {
+            versionInfo = VersionChecker.isNewVersionAvailable(version, project);
+            if (versionInfo.isNewVersionAvailable) {
+                switch  (versionInfo.urgency) {
+                    case CRITICAL:
+                        this.getLogger().warning("--- Important Update --- ");
+                        this.getLogger().warning("There is a new critical update for Tubs Status Plugin available");
+                        this.getLogger().warning("please update NOW");
+                        this.getLogger().warning("https://modrinth.com/plugin/tubs-status-plugin/version/" + versionInfo.latestVersion);
+                        this.getLogger().warning("backup your config");
+                        this.getLogger().warning("---");
+                        break;
+                    case HIGH:
+                        this.getLogger().warning("--- Important Update --- ");
+                        this.getLogger().warning("There is a new critical update for Tubs Status Plugin available");
+                        this.getLogger().warning("please update NOW");
+                        this.getLogger().warning("https://modrinth.com/plugin/tubs-status-plugin/version/" + versionInfo.latestVersion);
+                        this.getLogger().warning("backup your config");
+                        this.getLogger().warning("---");
+                        break;
+                    case NORMAL:
+                        this.getLogger().warning("There is a new update for Tubs Status Plugin available");
+                        this.getLogger().warning("https://modrinth.com/plugin/tubs-status-plugin/version/" + versionInfo.latestVersion);
+                        this.getLogger().warning("backup your config");
+                        break;
+                    case LOW:
+                        // beta update urgency currently not needed
+                        break;
+                    case NONE:
+                        // alpha update urgency currently not needed
+                        break;
+                }
+            } else {
+                this.getLogger().info(" You are running the latest version of Tubs Status Plugin");
+            }
+        } else {
+            this.getLogger().info("You have automatic checks for new updates disabled. Enable them in the config to stay up to date");
+        }
 
         // Register the PlayerJoinListener and ChatListener
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this ,this.statusManager), this);
@@ -78,6 +117,14 @@ public class StatusPlugin extends JavaPlugin {
             getLogger().info("Tub's StatusPlugin will now use PlaceholderAPI");
         } else {
             getLogger().warning("Could not find PlaceholderAPI! Tub's StatusPlugin will run without it..");
+        }
+
+        if (Bukkit.getPluginManager().getPlugin("LuckPerms") != null) {
+            this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
+            luckPermsPresent = true;
+            getLogger().info("Tub's StatusPlugin will now hook into LuckPerms");
+        } else {
+            getLogger().warning("Could not find LuckPerms! Tub's StatusPlugin will run without it..");
         }
 
         // Schedule a task to update the display name of online players every 30 seconds
@@ -133,6 +180,15 @@ public class StatusPlugin extends JavaPlugin {
 
     public boolean isPlaceholderAPIPresent() {
         return placeholderAPIPresent;
+    }
+    public VersionChecker.VersionInfo getVersionInfo() {
+        return versionInfo;
+    }
+    public LuckPerms getLuckPerms() {
+        return luckPerms;
+    }
+    public boolean isLuckPermsPresent() {
+        return luckPermsPresent;
     }
     /**
      * This method is called when the plugin is disabled.
