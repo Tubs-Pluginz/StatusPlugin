@@ -22,7 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class extends JavaPlugin and represents the main entry point for the plugin.
  */
 public class StatusPlugin extends JavaPlugin {
-    private final String version = "1.5";
+    private final String version = "1.5.1";
     private final String project = "km0yAITg";
      private int pluginId = 20463;
     private StatusManager statusManager;
@@ -54,6 +54,7 @@ public class StatusPlugin extends JavaPlugin {
         configManager.loadConfig();
 
         // Initialize the StatusManager and VersionChecker
+        this.statusManager = new StatusManager(this);
         if (configManager.isCheckUpdate()) {
             versionInfo = VersionChecker.isNewVersionAvailable(version, project);
             if (versionInfo.isNewVersionAvailable) {
@@ -136,7 +137,6 @@ public class StatusPlugin extends JavaPlugin {
             }, 0L, 600L); // 600 ticks = 30 seconds
         }
         getLogger().info("Tub's StatusPlugin successfully loaded");
-        getLogger().warning(String.valueOf(this.getConfig()));
     }
 
     /**
