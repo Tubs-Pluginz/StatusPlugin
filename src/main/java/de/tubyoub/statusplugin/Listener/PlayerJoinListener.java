@@ -49,9 +49,9 @@ public class PlayerJoinListener implements Listener {
         if (player.hasPermission("StatusPlugin.admin") && plugin.getConfigManager().isCheckUpdate()) {
             // Alert if a critical update is available
             if (this.versionInfo.isNewVersionAvailable && this.versionInfo.urgency == UpdateUrgency.CRITICAL || this.versionInfo.urgency == UpdateUrgency.HIGH) {
-                player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + "A critical update for BT Grave is available!");
-                player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + "Please update to version: " + this.versionInfo.latestVersion);
-                player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + "Backup your config");
+                player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " A critical update for Tubs StatusPlugin is available!");
+                player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Please update to version: " + this.versionInfo.latestVersion);
+                player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Backup your config");
                 // only works this way and idk why
                 TextComponent modrinthLink = new TextComponent(ChatColor.GREEN + "" + ChatColor.UNDERLINE + "Modrinth");
                 modrinthLink.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://modrinth.com/plugin/bt-graves/version/" + this.versionInfo.latestVersion));
