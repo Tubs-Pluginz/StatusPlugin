@@ -22,7 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class extends JavaPlugin and represents the main entry point for the plugin.
  */
 public class StatusPlugin extends JavaPlugin {
-    private final String version = "1.5.1";
+    private final String version = "1.5.2";
     private final String project = "km0yAITg";
      private int pluginId = 20463;
     private StatusManager statusManager;
