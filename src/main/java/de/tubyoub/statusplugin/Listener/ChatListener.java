@@ -50,12 +50,14 @@ public class ChatListener implements Listener {
                 status = PlaceholderAPI.setPlaceholders(player, status);
             }
 
+           // message = plugin.getStatusManager().translateColorsAndFormatting(message,player);
+
             // Format the broadcast message
             String broadcastMessage;
-            if (status == null) {
-                broadcastMessage = player.getName() + ": " + message;
+            if (status.isEmpty()) {
+                broadcastMessage = player.getName() + ": " + plugin.getStatusManager().translateColorsAndFormatting(message,event.getPlayer());
             } else {
-                broadcastMessage = "[" + ColourUtils.format(status) + ChatColor.RESET + "] " + player.getName() + ": " + message;
+                broadcastMessage = configManager.getOpeningCharacter() + ColourUtils.format(status) + ChatColor.RESET + configManager.getClosingCharacter() + " " + player.getName() + ": " + plugin.getStatusManager().translateColorsAndFormatting(message,player);;
             }
 
             // Broadcast the message and cancel the original event

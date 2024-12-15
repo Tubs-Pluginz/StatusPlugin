@@ -76,7 +76,7 @@ public class StatusPlaceholderExpansion extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, String identifier){
         if(player == null){
-            return "";
+            return null;
         }
         if (Objects.equals(identifier, "status")){
             return plugin.getStatusManager().getStatus(player);
