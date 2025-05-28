@@ -123,8 +123,19 @@ public class StatusManager {
         if (status.isEmpty()) {
             String translatedStatus = translateColorsAndFormatting(status, player);
             if (plugin.isLuckPermsPresent() && player.hasPermission("StatusPlugin.placeholders")) {
-                translatedStatus.replace("%LP_prefix%", Objects.requireNonNull(plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix()));
-                translatedStatus.replace("%LP_suffix%", Objects.requireNonNull(plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getSuffix()));
+                String prefix = plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix();
+                String suffix = plugin.getLuckPerms().getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getSuffix();
+
+                if (prefix != null) {
+                    translatedStatus = translatedStatus.replace("%LP_prefix%", prefix);
+                }else{
+                    translatedStatus = translatedStatus.replace("%LP_prefix%", "");
+                }
+                if (suffix != null) {
+                    translatedStatus = translatedStatus.replace("%LP_suffix%", suffix);
+                }else{
+                    translatedStatus = translatedStatus.replace("%LP_suffix%", "");
+                }
             }
             if (placeholderAPIPresent && player.hasPermission("StatusPlugin.placeholders")) {
                 translatedStatus = PlaceholderAPI.setPlaceholders(player, translatedStatus);
