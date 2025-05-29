@@ -55,7 +55,7 @@ public class ConfigManager {
             closingCharacter = config.getString("closingCharacter", "]");
             loadStatusGroups();
         } catch (IOException e) {
-            plugin.getLogger().severe("Could not load configuration: " + e.getMessage());
+            plugin.getFilteredLogger().error("Could not load configuration: {}", e.getMessage());
         }
     }
 
@@ -74,7 +74,7 @@ public class ConfigManager {
         try {
             config.save();
         } catch (IOException e) {
-            plugin.getLogger().severe("Could not save configuration: " + e.getMessage());
+            plugin.getFilteredLogger().error("Could not save configuration: {}", e.getMessage());
         }
     }
 

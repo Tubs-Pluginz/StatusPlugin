@@ -18,8 +18,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.bukkit.Bukkit.getLogger;
-
 /**
  * Class responsible for managing player statuses.
  */
@@ -199,7 +197,7 @@ public class StatusManager {
         try {
             yaml.save(statusFile);
         } catch (IOException e) {
-            getLogger().severe("Could not save statuses: " + e.getMessage());
+            plugin.getFilteredLogger().error("Could not save statuses: {}", e.getMessage());
         }
     }
 

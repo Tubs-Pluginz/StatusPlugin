@@ -8,14 +8,17 @@ import de.tubyoub.statusplugin.commands.GroupCommand;
 import de.tubyoub.statusplugin.commands.StatusCommand;
 import de.tubyoub.statusplugin.commands.tabCompleter.GroupTabCompleter;
 import de.tubyoub.statusplugin.commands.tabCompleter.StatusTabCompleter;
+import de.tubyoub.utils.FilteredComponentLogger;
 import de.tubyoub.utils.VersionChecker;
 import de.tubyoub.statusplugin.metrics.Metrics;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.event.Level;
 
 /**
  * Main class for the StatusPlugin.
@@ -34,6 +37,7 @@ public class StatusPlugin extends JavaPlugin {
     private VersionChecker.VersionInfo versionInfo;
     private LuckPerms luckPerms;
     private boolean luckPermsPresent = false;
+    private FilteredComponentLogger filteredLogger;
 
 
     /**
@@ -42,12 +46,15 @@ public class StatusPlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        getLogger().info( "______________________________");
-        getLogger().info("\\__    ___/   _____/\\______   \\");
-        getLogger().info( "  |    |  \\_____  \\  |     ___/");
-        getLogger().info( "  |    |  /        \\ |    |");
-        getLogger().info( "  |____| /_______  / |____|" + "     TubsStatusPlugin v"+ version);
-        getLogger().info( "                 \\/            "+ " Running on " + Bukkit.getServer().getName()  + " using Blackmagic");
+        ComponentLogger componentLogger = ComponentLogger.logger(this.getClass());
+        filteredLogger = new FilteredComponentLogger(componentLogger, Level.INFO);
+
+        filteredLogger.info( "______________________________");
+        filteredLogger.info("\\__    ___/   _____/\\______   \\");
+        filteredLogger.info( "  |    |  \\_____  \\  |     ___/");
+        filteredLogger.info( "  |    |  /        \\ |    |");
+        filteredLogger.info( "  |____| /_______  / |____|" + "     TubsStatusPlugin v"+ version);
+        filteredLogger.info( "                 \\/            "+ " Running on " + Bukkit.getServer().getName()  + " using Blackmagic");
 
         // Initialize the ConfigManager and load the configuration
         this.configManager = new ConfigManager(this);
@@ -59,39 +66,25 @@ public class StatusPlugin extends JavaPlugin {
             versionInfo = VersionChecker.isNewVersionAvailable(version, project);
             if (versionInfo.isNewVersionAvailable) {
                 switch  (versionInfo.urgency) {
-                    case CRITICAL:
-                        this.getLogger().warning("--- Important Update --- ");
-                        this.getLogger().warning("There is a new critical update for Tubs Status Plugin available");
-                        this.getLogger().warning("please update NOW");
-                        this.getLogger().warning("https://modrinth.com/plugin/tubs-status-plugin/version/" + versionInfo.latestVersion);
-                        this.getLogger().warning("backup your config");
-                        this.getLogger().warning("---");
+                    case CRITICAL, HIGH:
+                        this.filteredLogger.warn("--- Important Update --- ");
+                        this.filteredLogger.warn("There is a new critical update for Tubs Status Plugin available");
+                        this.filteredLogger.warn("please update NOW");
+                        this.filteredLogger.warn("https://modrinth.com/plugin/tubs-status-plugin/version/" + versionInfo.latestVersion);
+                        this.filteredLogger.warn("backup your config");
+                        this.filteredLogger.warn("---");
                         break;
-                    case HIGH:
-                        this.getLogger().warning("--- Important Update --- ");
-                        this.getLogger().warning("There is a new critical update for Tubs Status Plugin available");
-                        this.getLogger().warning("please update NOW");
-                        this.getLogger().warning("https://modrinth.com/plugin/tubs-status-plugin/version/" + versionInfo.latestVersion);
-                        this.getLogger().warning("backup your config");
-                        this.getLogger().warning("---");
-                        break;
-                    case NORMAL:
-                        this.getLogger().warning("There is a new update for Tubs Status Plugin available");
-                        this.getLogger().warning("https://modrinth.com/plugin/tubs-status-plugin/version/" + versionInfo.latestVersion);
-                        this.getLogger().warning("backup your config");
-                        break;
-                    case LOW:
-                        // beta update urgency currently not needed
-                        break;
-                    case NONE:
-                        // alpha update urgency currently not needed
+                    case NORMAL, LOW, NONE:
+                        this.filteredLogger.warn("There is a new update for Tubs Status Plugin available");
+                        this.filteredLogger.warn("https://modrinth.com/plugin/tubs-status-plugin/version/" + versionInfo.latestVersion);
+                        this.filteredLogger.warn("backup your config");
                         break;
                 }
             } else {
-                this.getLogger().info(" You are running the latest version of Tubs Status Plugin");
+                this.filteredLogger.info(" You are running the latest version of Tubs Status Plugin");
             }
         } else {
-            this.getLogger().info("You have automatic checks for new updates disabled. Enable them in the config to stay up to date");
+            this.filteredLogger.info("You have automatic checks for new updates disabled. Enable them in the config to stay up to date");
         }
 
         // Register the PlayerJoinListener and ChatListener
@@ -115,17 +108,17 @@ public class StatusPlugin extends JavaPlugin {
             placeholderExpansion = new StatusPlaceholderExpansion(this);
             placeholderExpansion.register();
             placeholderAPIPresent = true;
-            getLogger().info("Tub's StatusPlugin will now use PlaceholderAPI");
+            filteredLogger.info("Tub's StatusPlugin will now use PlaceholderAPI");
         } else {
-            getLogger().warning("Could not find PlaceholderAPI! Tub's StatusPlugin will run without it..");
+            filteredLogger.warn("Could not find PlaceholderAPI! Tub's StatusPlugin will run without it..");
         }
 
         if (Bukkit.getPluginManager().getPlugin("LuckPerms") != null) {
             this.luckPerms = getServer().getServicesManager().load(LuckPerms.class);
             luckPermsPresent = true;
-            getLogger().info("Tub's StatusPlugin will now hook into LuckPerms");
+            filteredLogger.info("Tub's StatusPlugin will now hook into LuckPerms");
         } else {
-            getLogger().warning("Could not find LuckPerms! Tub's StatusPlugin will run without it..");
+            filteredLogger.warn("Could not find LuckPerms! Tub's StatusPlugin will run without it..");
         }
 
         // Schedule a task to update the display name of online players every 30 seconds
@@ -136,7 +129,7 @@ public class StatusPlugin extends JavaPlugin {
                 }
             }, 0L, 600L); // 600 ticks = 30 seconds
         }
-        getLogger().info("Tub's StatusPlugin successfully loaded");
+        filteredLogger.info("Tub's StatusPlugin successfully loaded");
     }
 
     /**
@@ -189,6 +182,9 @@ public class StatusPlugin extends JavaPlugin {
     }
     public boolean isLuckPermsPresent() {
         return luckPermsPresent;
+    }
+    public FilteredComponentLogger getFilteredLogger(){
+        return filteredLogger;
     }
     /**
      * This method is called when the plugin is disabled.
