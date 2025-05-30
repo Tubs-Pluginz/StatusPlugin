@@ -55,9 +55,9 @@ public class ChatListener implements Listener {
             // Format the broadcast message
             String broadcastMessage;
             if (status.isEmpty()) {
-                broadcastMessage = player.getName() + ": " + plugin.getStatusManager().translateColorsAndFormatting(message,player);
+                broadcastMessage = player.getName() + ": " + statusManager.translateColorsAndFormatting(message,player);
             } else {
-                broadcastMessage = configManager.getOpeningCharacter() + ColourUtils.format(status) + ChatColor.RESET + configManager.getClosingCharacter() + " " + player.getName() + ": " + plugin.getStatusManager().translateColorsAndFormatting(message,player);
+                broadcastMessage = configManager.getOpeningCharacter() + ColourUtils.format(status) + ChatColor.RESET + configManager.getClosingCharacter() + " " + player.getName() + ": " + statusManager.translateColorsAndFormatting(message,player);
             }
 
             // Broadcast the message and cancel the original event

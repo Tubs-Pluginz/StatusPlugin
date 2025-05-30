@@ -3,6 +3,7 @@ package de.tubyoub.utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -20,11 +21,15 @@ public class FilteredComponentLogger implements ComponentLogger {
 
     private final ComponentLogger delegate;
     private volatile Level currentLevel; // Use volatile for thread safety
-    private final MiniMessage miniMessage = MiniMessage.miniMessage();
+    private final MiniMessage miniMessage;
 
     public FilteredComponentLogger(ComponentLogger delegate, Level initialLevel) {
         this.delegate = delegate;
         this.currentLevel = initialLevel;
+        this.miniMessage = MiniMessage.builder()
+                                      .tags(TagResolver.standard())
+                                      .strict(false)
+                                      .build();
     }
 
     /**
@@ -35,7 +40,6 @@ public class FilteredComponentLogger implements ComponentLogger {
     public void setLevel(Level newLevel) {
         this.currentLevel = newLevel;
     }
-
 
     /**
      * Helper method to check if a given level is enabled based on the current level.

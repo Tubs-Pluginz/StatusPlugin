@@ -2,36 +2,62 @@
 #      Tub's StatusPlugin      #
 #          by TubYoub          #
 ################################
+#
+# Documentation: https://docs.pluginz.dev
+#
 # Don't change this value, it's changed by the plugin if needed
-fileversion: 4
+fileversion: 5
 
 # Check for updates on startup
 # default: true
 checkUpdate: true
+
+# Choose which logging level should be used
+# It depends on how much you want you're console to be filled with information from TSP
+# For production you can safely set it to a higher level but for development/testing it is recommended to use a lower level
+# 10 = Debug
+# 20 = Info
+# 30 = Warning
+# 40 = Error
+#default: 20
+loggerLevel: 20
+
 # maximum Character length a Status should be allowed to have.
 # default: 15
 maxStatusLength: 15
+
 # If the Chat formatter should be enabled (so the Plugin sends Messages with the Status in front of the Player name and formats colors).
 # default: true
 chatFormatter: true
+
 # If the Tablist name should be changed by the plugin or not. (restart your server so the changes will work correctly)
 # default: true
 changeTablistNames: true
+
 # Enable group mode for statuses
 # When enabled, players can only choose from predefined status groups
 # default: false
 groupMode: false
-# Define status groups
-# Each group has a name and a status
-statusGroups:
-  t1:
-    status: 'Team1'
-  t2:
-    status: 'Team2'
-  t3:
-    status: 'Team3'
 
 # Opening and closing characters for the status
 # default: '[' & ']'
 openingCharacter: '['
 closingCharacter: ']'
+
+# Define status groups
+# Each group has a name and a status
+# You can also define specific permissions required to use a group.
+# If 'permissions' is empty or not present, the general 'StatusPlugin.group.set' permission will be checked.
+# The following Group names will be ignored by the plugin: testGroup1, testGroup2, testGroup3
+# they are just for showcase
+statusGroups:
+  testGroup1:
+    status: 'Team1'
+    permissions:
+      - 'StatusPlugin.group.set.t1'
+  testGroup2:
+    status: 'Team2'
+    permissions:
+      - 'StatusPlugin.group.set.t2'
+  testGroup3:
+    status: 'Team3'
