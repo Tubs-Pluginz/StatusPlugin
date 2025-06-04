@@ -86,14 +86,26 @@ public class StatusManager {
      *
      * @param player    The player whose status is to be set.
      * @param groupName The name of the status group.
+     * @param admin     The admin setting the status (null if player is setting their own status)
      * @return A boolean indicating whether the group status was set successfully.
      */
-    public boolean setGroupStatus(Player player, String groupName) {
+    public boolean setGroupStatus(Player player, String groupName, Player admin) {
         Map<String, GroupConfig> statusGroups = configManager.getStatusGroups();
-        plugin.getFilteredLogger().debug("Attempting to set group status for player {} to group {}", player.getName(), groupName);
+
+        if (admin != null) {
+            plugin.getFilteredLogger().debug("Admin {} attempting to set group status for player {} to group {}",
+                    admin.getName(), player.getName(), groupName);
+        } else {
+            plugin.getFilteredLogger().debug("Player {} attempting to set own group status to {}",
+                    player.getName(), groupName);
+        }
 
         if (!statusGroups.containsKey(groupName)) {
-            player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Invalid group name.");
+            if (admin != null) {
+                admin.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Invalid group name.");
+            } else {
+                player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + " Invalid group name.");
+            }
             plugin.getFilteredLogger().debug("Invalid group name provided: {}", groupName);
             return false;
         }
@@ -101,28 +113,47 @@ public class StatusManager {
         GroupConfig groupConfig = statusGroups.get(groupName);
         List<String> permissions = groupConfig.getPermissions();
 
-        boolean hasPermission = false;
-        if (permissions == null || permissions.isEmpty()) {
-            // If no specific permissions are defined for the group, check the general group permission
-            if (player.hasPermission("StatusPlugin.group.set")) {
-                hasPermission = true;
-                plugin.getFilteredLogger().debug("Player {} has general group permission for group {}", player.getName(), groupName);
-            }
-        } else {
-            // Check if the player has any of the specific permissions defined for the group
-            for (String perm : permissions) {
-                if (player.hasPermission(perm)) {
+        // Skip permission check if an admin is setting the status for another player
+        boolean skipPermissionCheck = (admin != null && admin.hasPermission("StatusPlugin.admin.setStatus"));
+
+        if (!skipPermissionCheck) {
+            boolean hasPermission = false;
+            if (permissions == null || permissions.isEmpty()) {
+                // If no specific permissions are defined for the group, check the general group permission
+                if (player.hasPermission("StatusPlugin.group.set")) {
                     hasPermission = true;
-                    plugin.getFilteredLogger().debug("Player {} has specific permission {} for group {}", player.getName(), perm, groupName);
-                    break;
+                    plugin.getFilteredLogger().debug("Player {} has general group permission for group {}",
+                            player.getName(), groupName);
+                }
+            } else {
+                // Check if the player has any of the specific permissions defined for the group
+                for (String perm : permissions) {
+                    if (player.hasPermission(perm)) {
+                        hasPermission = true;
+                        plugin.getFilteredLogger().debug("Player {} has specific permission {} for group {}",
+                                player.getName(), perm, groupName);
+                        break;
+                    }
                 }
             }
-        }
 
-        if (!hasPermission && !player.hasPermission("StatusPlugin.admin.setStatus")) {
-            player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED + "You don't have permission to use this status group.");
-            plugin.getFilteredLogger().debug("Player {} lacks permission to use group {}", player.getName(), groupName);
-            return false;
+            if (!hasPermission && !player.hasPermission("StatusPlugin.admin.setStatus")) {
+                if (admin != null) {
+                    admin.sendMessage(plugin.getPluginPrefix() + ChatColor.RED +
+                            " You cannot set this player to a group they don't have permission to use.");
+                    plugin.getFilteredLogger().debug("Admin {} tried to set unauthorized group {} for player {}",
+                            admin.getName(), groupName, player.getName());
+                } else {
+                    player.sendMessage(plugin.getPluginPrefix() + ChatColor.RED +
+                            "You don't have permission to use this status group.");
+                    plugin.getFilteredLogger().debug("Player {} lacks permission to use group {}",
+                            player.getName(), groupName);
+                }
+                return false;
+            }
+        } else {
+            plugin.getFilteredLogger().debug("Admin {} bypassing permission check for setting group {} for player {}",
+                    admin.getName(), groupName, player.getName());
         }
 
         String status = groupConfig.getStatus();
@@ -131,8 +162,27 @@ public class StatusManager {
             updateDisplayName(player);
         }
         saveStatuses();
-        plugin.getFilteredLogger().debug("Player {} status set to group '{}' ({})", player.getName(), groupName, status);
+
+        if (admin != null) {
+            plugin.getFilteredLogger().debug("Admin {} set player {} status to group '{}' ({})",
+                    admin.getName(), player.getName(), groupName, status);
+        } else {
+            plugin.getFilteredLogger().debug("Player {} status set to group '{}' ({})",
+                    player.getName(), groupName, status);
+        }
+
         return true;
+    }
+
+    /**
+     * Method to set a player's status to a predefined group status (overload for backward compatibility).
+     *
+     * @param player    The player whose status is to be set.
+     * @param groupName The name of the status group.
+     * @return A boolean indicating whether the group status was set successfully.
+     */
+    public boolean setGroupStatus(Player player, String groupName) {
+        return setGroupStatus(player, groupName, null);
     }
 
     /**

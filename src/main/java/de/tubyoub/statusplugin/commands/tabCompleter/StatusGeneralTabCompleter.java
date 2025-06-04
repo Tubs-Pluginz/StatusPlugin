@@ -33,7 +33,7 @@ public class StatusGeneralTabCompleter implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        plugin.getFilteredLogger().debug("Tab completing for /tsp command. Args: {}", String.join(" ", args));
+        // plugin.getFilteredLogger().debug("Tab completing for /tsp command. Args: {}", String.join(" ", args));
 
         if (args.length == 1) {
             // Add suggestions for the first argument of the command

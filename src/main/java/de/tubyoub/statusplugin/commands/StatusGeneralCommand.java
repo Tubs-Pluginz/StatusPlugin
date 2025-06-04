@@ -117,17 +117,25 @@ public class StatusGeneralCommand implements CommandExecutor {
             return;
         }
         Player target = Bukkit.getPlayer(args[1]);
-        if (target != null) {
-            String status = Arrays.stream(args, 2, args.length).collect(Collectors.joining(" "));
-            if (statusManager.setStatus(target, status, sender)) {
-                sender.sendMessage(plugin.getPluginPrefix() + " Set " + target.getName() + "'s status to: "
-                        + ColourUtils.format(status));
-                plugin.getFilteredLogger().debug("Player {} set status for {} to: {}", sender.getName(),
-                        target.getName(), status);
-            }
-        } else {
+        if (target == null) {
             sender.sendMessage("Invalid player name: " + args[1]);
             plugin.getFilteredLogger().debug("Invalid player name provided for setstatus: {}", args[1]);
+            return;
+        }
+
+        String content = Arrays.stream(args, 2, args.length).collect(Collectors.joining(" "));
+        boolean isGroupMode = plugin.getConfigManager().isGroupMode();
+
+        if (isGroupMode) {
+            if (statusManager.setGroupStatus(target, content, sender)) {
+                sender.sendMessage(plugin.getPluginPrefix() + " Set " + target.getName() + "'s group to: " + content);
+                plugin.getFilteredLogger().debug("Player {} set group for {} to: {}", sender.getName(), target.getName(), content);
+            }
+        } else {
+            if (statusManager.setStatus(target, content, sender)) {
+                sender.sendMessage(plugin.getPluginPrefix() + " Set " + target.getName() + "'s status to: " + ColourUtils.format(content));
+                plugin.getFilteredLogger().debug("Player {} set status for {} to: {}", sender.getName(), target.getName(), content);
+            }
         }
     }
 

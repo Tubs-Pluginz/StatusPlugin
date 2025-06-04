@@ -34,7 +34,7 @@ public class StatusSetTabCompleter implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> suggestions = new ArrayList<>();
-        plugin.getFilteredLogger().debug("Tab completing for /status command. Args: {}", String.join(" ", args));
+        // plugin.getFilteredLogger().debug("Tab completing for /status command. Args: {}", String.join(" ", args));
 
         if (!(sender instanceof Player)) {
             plugin.getFilteredLogger().debug("Console sender, no tab completion for /status.");
