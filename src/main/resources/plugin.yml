@@ -6,9 +6,13 @@ author: TubYoub
 softdepend: [PlaceholderAPI, LuckPerms]
 commands:
   status:
-    description: Set a player's status, get info, get help, reload the plugin, set/reset max length
-  group:
-    description: Set a player's status group
+    description: Set a player's status (or group if group mode is on) or remove your status.
+    usage: /status <status> or /status remove
+    aliases: [ s ]
+  tsp:
+    description: General commands for the StatusPlugin (reload, info, help, setmaxlength, etc.).
+    usage: /tsp <subcommand> [args...]
+    aliases: [ tubstatusplugin ]
 permissions:
   StatusPlugin.setStatus:
     description: Allows setting own status. (default player)

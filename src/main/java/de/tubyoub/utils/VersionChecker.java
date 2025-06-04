@@ -30,7 +30,7 @@ public class VersionChecker {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("User-Agent", "BTPluginz/TubsStatusPlugin/"+ version + " (github@tubyoub.de)");
+            connection.setRequestProperty("User-Agent", "TubsPluginz/TSP/"+ version + " (github@tubyoub.de)");
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -44,7 +44,7 @@ public class VersionChecker {
                         String changelog = (String) latestVersion.get("changelog");
                         String versionType = (String) latestVersion.get("version_type");
 
-                        if (!latestVersionNumber.equals(version)) {
+                        if (compareVersions(latestVersionNumber, version) > 0) {
                             UpdateUrgency urgency = determineUrgency(changelog, versionType);
                             return new VersionInfo(true, latestVersionNumber, changelog, urgency);
                         } else {
@@ -60,7 +60,7 @@ public class VersionChecker {
     }
 
     private static UpdateUrgency determineUrgency(String changelog, String versionType) {
-        if (versionType.equals("release")) {
+        if (versionType.equals("release") ||versionType.equals("beta") || versionType.equals("alpha")) {
             if (changelog.toLowerCase().contains("security") || changelog.toLowerCase().contains("critical")) {
                 return UpdateUrgency.CRITICAL;
             } else if (changelog.toLowerCase().contains("important") || changelog.toLowerCase().contains("major")) {
@@ -68,8 +68,6 @@ public class VersionChecker {
             } else {
                 return UpdateUrgency.NORMAL;
             }
-        } else if (versionType.equals("beta")) {
-            return UpdateUrgency.LOW;
         } else {
             return UpdateUrgency.NONE;
         }
@@ -110,5 +108,29 @@ public class VersionChecker {
             e.printStackTrace();
             return Arrays.asList(); // Handle parsing exception
         }
+    }
+
+    /**
+     * Compares two version strings.
+     * @param version1 The first version string.
+     * @param version2 The second version string.
+     * @return A positive number if version1 is newer, 0 if they are equal, and a negative number if version2 is newer.
+     */
+    private static int compareVersions(String version1, String version2) {
+        String[] parts1 = version1.split("\\.");
+        String[] parts2 = version2.split("\\.");
+
+        int length = Math.max(parts1.length, parts2.length);
+
+        for (int i = 0; i < length; i++) {
+            int v1 = i < parts1.length ? Integer.parseInt(parts1[i]) : 0;
+            int v2 = i < parts2.length ? Integer.parseInt(parts2[i]) : 0;
+
+            if (v1 != v2) {
+                return v1 - v2;
+            }
+        }
+
+        return 0;
     }
 }
